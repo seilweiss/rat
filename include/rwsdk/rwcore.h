@@ -501,6 +501,20 @@ struct RwTexture
     RwInt32 refCount;
 };
 
+struct RwFrame
+{
+    RwObject object;
+    RwLLLink inDirtyListLink;
+    RwMatrix modelling;
+    RwMatrix ltm;
+    RwLinkList objectList;
+    struct RwFrame* child;
+    struct RwFrame* next;
+    struct RwFrame* root;
+};
+typedef struct RwFrame RWALIGN(RwFrame, rwFRAMEALIGNMENT);
+typedef RwFrame*(*RwFrameCallBack)(RwFrame* frame, void* data);
+
 typedef struct RwObjectHasFrame RwObjectHasFrame;
 typedef RwObjectHasFrame*(*RwObjectHasFrameSyncFunction)(RwObjectHasFrame* object);
 struct RwObjectHasFrame
