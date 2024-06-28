@@ -131,6 +131,8 @@ struct RwObject
     void* parent;
 };
 
+#define rwObjectGetParent(object) (((const RwObject *)(object))->parent)
+
 #ifndef RWDEBUG
 #define RwMalloc(_s, _h, line) ((RWSRCGLOBAL(memoryFuncs).rwmalloc)((_s), (_h)))
 #else
@@ -1092,6 +1094,24 @@ struct RwFrame
 typedef struct RwFrame RWALIGN(RwFrame, rwFRAMEALIGNMENT);
 typedef RwFrame*(*RwFrameCallBack)(RwFrame* frame, void* data);
 
+#define RwFrameGetMatrixMacro(_f) (&(_f)->modelling)
+
+#ifndef RWDEBUG
+#define RwFrameGetMatrix(_f) RwFrameGetMatrixMacro(_f)
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#ifdef RWDEBUG
+extern RwMatrix* RwFrameGetMatrix(RwFrame* frame);
+#endif
+
+#ifdef __cplusplus
+}
+#endif
+
 typedef struct RwObjectHasFrame RwObjectHasFrame;
 typedef RwObjectHasFrame*(*RwObjectHasFrameSyncFunction)(RwObjectHasFrame* object);
 struct RwObjectHasFrame
@@ -1109,12 +1129,25 @@ struct RwBBox
 };
 
 #define RwCameraGetNearClipPlaneMacro(_camera) ((_camera)->nearPlane)
+#define RwCameraGetFarClipPlaneMacro(_camera) ((_camera)->farPlane)
 #define RwCameraGetCurrentCameraMacro() ((RwCamera*)RWSRCGLOBAL(curCamera))
+#define RwCameraGetFrameMacro(_camera) ((RwFrame *)rwObjectGetParent((_camera)))
 
 #ifndef RWDEBUG
 #define RwCameraGetNearClipPlane(_camera) RwCameraGetNearClipPlaneMacro(_camera)
+#define RwCameraGetFarClipPlane(_camera) RwCameraGetFarClipPlaneMacro(_camera)
 #define RwCameraGetCurrentCamera() RwCameraGetCurrentCameraMacro()
+#define RwCameraGetFrame(_camera) RwCameraGetFrameMacro(_camera)
 #endif
+
+enum RwCameraClearMode
+{
+    rwCAMERACLEARIMAGE = 0x1,
+    rwCAMERACLEARZ = 0x2,
+    rwCAMERACLEARSTENCIL = 0x4,
+    rwCAMERACLEARMODEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+typedef enum RwCameraClearMode RwCameraClearMode;
 
 enum RwCameraProjection
 {
@@ -1165,9 +1198,15 @@ struct RwCamera
 extern "C" {
 #endif
 
+extern RwCamera* RwCameraEndUpdate(RwCamera* camera);
+extern RwCamera* RwCameraClear(RwCamera* camera, RwRGBA* colour, RwInt32 clearMode);
+extern RwCamera* RwCameraSetFarClipPlane(RwCamera* camera, RwReal farClip);
+
 #ifdef RWDEBUG
 extern RwReal RwCameraGetNearClipPlane(const RwCamera* camera);
+extern RwReal RwCameraGetFarClipPlane(const RwCamera* camera);
 extern RwCamera* RwCameraGetCurrentCamera(void);
+extern RwFrame* RwCameraGetFrame(const RwCamera* camera);
 #endif
 
 #ifdef __cplusplus
