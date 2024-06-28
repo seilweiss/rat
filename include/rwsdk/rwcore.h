@@ -1,6 +1,9 @@
 #ifndef RWCORE_H
 #define RWCORE_H
 
+#include <stddef.h>
+#include <stdarg.h>
+
 #define rwBIGENDIAN
 
 typedef long RwFixed;
@@ -49,6 +52,13 @@ typedef RwInt32 RwBool;
 #undef TRUE
 #endif
 #define TRUE !FALSE
+
+typedef struct RwV2d RwV2d;
+struct RwV2d
+{
+    RwReal x;
+    RwReal y;
+};
 
 typedef struct RwV3d RwV3d;
 struct RwV3d
@@ -104,6 +114,13 @@ struct RwSurfaceProperties
     RwReal diffuse;
 };
 
+typedef struct RwPlane RwPlane;
+struct RwPlane
+{
+    RwV3d normal;
+    RwReal distance;
+};
+
 typedef struct RwObject RwObject;
 struct RwObject
 {
@@ -112,6 +129,77 @@ struct RwObject
     RwUInt8 flags;
     RwUInt8 privateFlags;
     void* parent;
+};
+
+struct RwMemoryFunctions
+{
+    void*(*rwmalloc)(size_t size, RwUInt32 hint);
+    void(*rwfree)(void* mem);
+    void*(*rwrealloc)(void* mem, size_t newSize, RwUInt32 hint);
+    void*(*rwcalloc)(size_t numObj, size_t sizeObj, RwUInt32 hint);
+};
+typedef struct RwMemoryFunctions RwMemoryFunctions;
+
+typedef struct RwFreeList RwFreeList;
+struct RwFreeList
+{
+    RwUInt32 entrySize;
+#ifdef RWDEBUG
+    RwUInt32 nonAlignedEntrySize;
+#endif
+    RwUInt32 entriesPerBlock;
+    RwUInt32 heapSize;
+    RwUInt32 alignment;
+    RwLinkList blockList;
+    RwUInt32 flags;
+    RwLLLink link;
+#ifdef RWDEBUG
+    const RwChar* fileCreate;
+    RwUInt32 lineCreate;
+#endif
+};
+
+typedef void*(*RwMemoryAllocFn)(RwFreeList* fl, RwUInt32 hint);
+typedef RwFreeList*(*RwMemoryFreeFn)(RwFreeList* fl, void* pData);
+
+typedef int(*vecSprintfFunc)(RwChar* buffer, const RwChar* format, ...);
+typedef int(*vecVsprintfFunc)(RwChar* buffer, const RwChar* format, va_list argptr); 
+typedef RwChar*(*vecStrcpyFunc)(RwChar* dest, const RwChar* srce);
+typedef RwChar*(*vecStrncpyFunc)(RwChar* dest, const RwChar* srce, size_t size);
+typedef RwChar*(*vecStrcatFunc)(RwChar* dest, const RwChar* srce);
+typedef RwChar*(*vecStrncatFunc)(RwChar* dest, const RwChar* srce, size_t size);
+typedef RwChar*(*vecStrrchrFunc)(const RwChar* string, int findThis);
+typedef RwChar*(*vecStrchrFunc)(const RwChar* string, int findThis);
+typedef RwChar*(*vecStrstrFunc)(const RwChar* string, const RwChar* findThis);
+typedef int(*vecStrcmpFunc)(const RwChar* string1, const RwChar* string2);
+typedef int(*vecStrncmpFunc)(const RwChar* string1, const RwChar* string2, size_t max_size);
+typedef int(*vecStricmpFunc)(const RwChar* string1, const RwChar* string2);
+typedef size_t(*vecStrlenFunc)(const RwChar* string);
+typedef RwChar*(*vecStruprFunc)(RwChar* string);
+typedef RwChar*(*vecStrlwrFunc)(RwChar* string);
+typedef RwChar*(*vecStrtokFunc)(RwChar* string, const RwChar* delimit);
+typedef int(*vecSscanfFunc)(const RwChar* buffer, const RwChar* format, ...);
+
+typedef struct RwStringFunctions RwStringFunctions;
+struct RwStringFunctions
+{
+    vecSprintfFunc vecSprintf;
+    vecVsprintfFunc vecVsprintf;
+    vecStrcpyFunc vecStrcpy;
+    vecStrncpyFunc vecStrncpy;
+    vecStrcatFunc vecStrcat;
+    vecStrncatFunc vecStrncat;
+    vecStrrchrFunc vecStrrchr;
+    vecStrchrFunc vecStrchr;
+    vecStrstrFunc vecStrstr;
+    vecStrcmpFunc vecStrcmp;
+    vecStrncmpFunc vecStrncmp;
+    vecStricmpFunc vecStricmp;
+    vecStrlenFunc vecStrlen;
+    vecStruprFunc vecStrupr;
+    vecStrlwrFunc vecStrlwr;
+    vecStrtokFunc vecStrtok;
+    vecSscanfFunc vecSscanf;
 };
 
 struct RwMatrixTag
@@ -155,6 +243,10 @@ typedef RxVertexIndex RwImVertexIndex;
 #define RwIm2DVertexGetScreenX(vert) ((vert)->x)
 #define RwIm2DVertexGetScreenY(vert) ((vert)->y)
 #define RwIm2DVertexGetScreenZ(vert) ((vert)->z)
+#define RwIm2DVertexSetU(vert, texU, recipz) ((vert)->u = (texU))
+#define RwIm2DVertexSetV(vert, texV, recipz) ((vert)->v = (texV))
+#define RwIm2DVertexGetU(vert) ((vert)->u)
+#define RwIm2DVertexGetV(vert) ((vert)->v)
 
 #define RwIm2DVertexSetIntRGBA(vert, red, green, blue, alpha)           \
 MACRO_START                                                             \
@@ -166,6 +258,41 @@ MACRO_START                                                             \
 }                                                                       \
 MACRO_STOP
 
+enum RwRenderState
+{
+    rwRENDERSTATENARENDERSTATE = 0,
+    rwRENDERSTATETEXTURERASTER,
+    rwRENDERSTATETEXTUREADDRESS,
+    rwRENDERSTATETEXTUREADDRESSU,
+    rwRENDERSTATETEXTUREADDRESSV,
+    rwRENDERSTATETEXTUREPERSPECTIVE,
+    rwRENDERSTATEZTESTENABLE,
+    rwRENDERSTATESHADEMODE,
+    rwRENDERSTATEZWRITEENABLE,
+    rwRENDERSTATETEXTUREFILTER,
+    rwRENDERSTATESRCBLEND,
+    rwRENDERSTATEDESTBLEND,
+    rwRENDERSTATEVERTEXALPHAENABLE,
+    rwRENDERSTATEBORDERCOLOR,
+    rwRENDERSTATEFOGENABLE,
+    rwRENDERSTATEFOGCOLOR,
+    rwRENDERSTATEFOGTYPE,
+    rwRENDERSTATEFOGDENSITY,
+    rwRENDERSTATECULLMODE = 20,
+    rwRENDERSTATESTENCILENABLE,
+    rwRENDERSTATESTENCILFAIL,
+    rwRENDERSTATESTENCILZFAIL,
+    rwRENDERSTATESTENCILPASS,
+    rwRENDERSTATESTENCILFUNCTION,
+    rwRENDERSTATESTENCILFUNCTIONREF,
+    rwRENDERSTATESTENCILFUNCTIONMASK,
+    rwRENDERSTATESTENCILFUNCTIONWRITEMASK,
+    rwRENDERSTATEALPHATESTFUNCTION,
+    rwRENDERSTATEALPHATESTFUNCTIONREF,
+    rwRENDERSTATEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+typedef enum RwRenderState RwRenderState;
+
 enum RwFogType
 {
     rwFOGTYPENAFOGTYPE = 0,
@@ -175,6 +302,177 @@ enum RwFogType
     rwFOGTYPEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
 };
 typedef enum RwFogType RwFogType;
+
+enum RwPrimitiveType
+{
+    rwPRIMTYPENAPRIMTYPE = 0,
+    rwPRIMTYPELINELIST = 1,
+    rwPRIMTYPEPOLYLINE = 2,
+    rwPRIMTYPETRILIST = 3,
+    rwPRIMTYPETRISTRIP = 4,
+    rwPRIMTYPETRIFAN = 5,
+    rwPRIMTYPEPOINTLIST = 6,
+    rwPRIMITIVETYPEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+typedef enum RwPrimitiveType RwPrimitiveType;
+
+#define RwIm2DGetNearScreenZMacro() (RWSRCGLOBAL(dOpenDevice).zBufferNear)
+#define RwIm2DRenderPrimitiveMacro(_primType, _vertices, _numVertices) (RWSRCGLOBAL(dOpenDevice).fpIm2DRenderPrimitive(_primType, _vertices, _numVertices))
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#ifndef RWDEBUG
+#define RwIm2DGetNearScreenZ() RwIm2DGetNearScreenZMacro()
+#define RwIm2DRenderPrimitive(_primType, _vertices, _numVertices) RwIm2DRenderPrimitiveMacro(_primType, _vertices, _numVertices)
+#else
+extern RwReal RwIm2DGetNearScreenZ(void);
+extern RwBool RwIm2DRenderPrimitive(RwPrimitiveType primType, RwIm2DVertex* vertices, RwInt32 numVertices);
+#endif
+
+#ifdef __cplusplus
+}
+#endif
+
+#define rwSTANDARDNASTANDARD 0
+#define rwSTANDARDCAMERABEGINUPDATE 1
+#define rwSTANDARDRGBTOPIXEL 2
+#define rwSTANDARDPIXELTORGB 3
+#define rwSTANDARDRASTERCREATE 4
+#define rwSTANDARDRASTERDESTROY 5
+#define rwSTANDARDIMAGEGETRASTER 6
+#define rwSTANDARDRASTERSETIMAGE 7
+#define rwSTANDARDTEXTURESETRASTER 8
+#define rwSTANDARDIMAGEFINDRASTERFORMAT 9
+#define rwSTANDARDCAMERAENDUPDATE 10
+#define rwSTANDARDSETRASTERCONTEXT 11
+#define rwSTANDARDRASTERSUBRASTER 12
+#define rwSTANDARDRASTERCLEARRECT 13
+#define rwSTANDARDRASTERCLEAR 14
+#define rwSTANDARDRASTERLOCK 15
+#define rwSTANDARDRASTERUNLOCK 16
+#define rwSTANDARDRASTERRENDER 17
+#define rwSTANDARDRASTERRENDERSCALED 18
+#define rwSTANDARDRASTERRENDERFAST 19
+#define rwSTANDARDRASTERSHOWRASTER 20
+#define rwSTANDARDCAMERACLEAR 21
+#define rwSTANDARDHINTRENDERF2B 22
+#define rwSTANDARDRASTERLOCKPALETTE 23
+#define rwSTANDARDRASTERUNLOCKPALETTE 24
+#define rwSTANDARDNATIVETEXTUREGETSIZE 25
+#define rwSTANDARDNATIVETEXTUREREAD 26
+#define rwSTANDARDNATIVETEXTUREWRITE 27
+#define rwSTANDARDRASTERGETMIPLEVELS 28
+#define rwSTANDARDNUMOFSTANDARD 29
+
+typedef RwBool(*RwStandardFunc)(void* pOut,void* pInOut, RwInt32 nI);
+
+typedef RwBool(*RwSystemFunc)(RwInt32 nOption, void* pOut, void* pInOut, RwInt32 nIn);
+typedef RwBool(*RwRenderStateSetFunction)(RwRenderState nState, void* pParam);
+typedef RwBool(*RwRenderStateGetFunction)(RwRenderState nState, void* pParam);
+typedef RwBool(*RwIm2DRenderLineFunction)(RwIm2DVertex* vertices, RwInt32 numVertices, RwInt32 vert1, RwInt32 vert2);
+typedef RwBool(*RwIm2DRenderTriangleFunction)(RwIm2DVertex* vertices, RwInt32 numVertices, RwInt32 vert1, RwInt32 vert2, RwInt32 vert3);
+typedef RwBool(*RwIm2DRenderPrimitiveFunction)(RwPrimitiveType primType, RwIm2DVertex* vertices, RwInt32 numVertices);
+typedef RwBool(*RwIm2DRenderIndexedPrimitiveFunction)(RwPrimitiveType primType, RwIm2DVertex* vertices, RwInt32 numVertices, RwImVertexIndex* indices, RwInt32 numIndices);
+typedef RwBool(*RwIm3DRenderLineFunction)(RwInt32 vert1, RwInt32 vert2);
+typedef RwBool(*RwIm3DRenderTriangleFunction)(RwInt32 vert1, RwInt32 vert2, RwInt32 vert3);
+typedef RwBool(*RwIm3DRenderPrimitiveFunction)(RwPrimitiveType primType);
+typedef RwBool(*RwIm3DRenderIndexedPrimitiveFunction)(RwPrimitiveType primtype, RwImVertexIndex* indices, RwInt32 numIndices);
+
+typedef struct RwDevice RwDevice;
+struct RwDevice
+{
+    RwReal gammaCorrection;
+    RwSystemFunc fpSystem;
+    RwReal zBufferNear;
+    RwReal zBufferFar;
+    RwRenderStateSetFunction fpRenderStateSet;
+    RwRenderStateGetFunction fpRenderStateGet;
+    RwIm2DRenderLineFunction fpIm2DRenderLine;
+    RwIm2DRenderTriangleFunction fpIm2DRenderTriangle;
+    RwIm2DRenderPrimitiveFunction fpIm2DRenderPrimitive;
+    RwIm2DRenderIndexedPrimitiveFunction fpIm2DRenderIndexedPrimitive;
+    RwIm3DRenderLineFunction fpIm3DRenderLine;
+    RwIm3DRenderTriangleFunction fpIm3DRenderTriangle;
+    RwIm3DRenderPrimitiveFunction fpIm3DRenderPrimitive;
+    RwIm3DRenderIndexedPrimitiveFunction fpIm3DRenderIndexedPrimitive;
+};
+
+typedef struct RwMetrics RwMetrics;
+struct RwMetrics
+{
+    RwUInt32 numTriangles;
+    RwUInt32 numProcTriangles;
+    RwUInt32 numVertices;
+    RwUInt32 numTextureUploads;
+    RwUInt32 sizeTextureUploads;
+    RwUInt32 numResourceAllocs;
+    void* devSpecificMetrics;
+};
+
+enum RwDebugType
+{
+    rwNADEBUGTYPE = 0,
+    rwDEBUGASSERT,
+    rwDEBUGERROR,
+    rwDEBUGMESSAGE,
+    rwDEBUGTRACE,
+    rwDEBUGTYPEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+typedef enum RwDebugType RwDebugType;
+
+typedef void(*RwDebugHandler)(RwDebugType type, const RwChar* string);
+
+#define RWSRCGLOBAL(variable) (((RwGlobals*)RwEngineInstance)->variable)
+
+enum RwEngineStatus
+{
+    rwENGINESTATUSIDLE = 0,
+    rwENGINESTATUSINITED = 1,
+    rwENGINESTATUSOPENED = 2,
+    rwENGINESTATUSSTARTED = 3,
+    rwENGINESTATUSFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+typedef enum RwEngineStatus RwEngineStatus;
+
+typedef struct RwGlobals RwGlobals;
+struct RwGlobals
+{
+#ifdef RWDEBUG
+    RwDebugHandler debugFunction;
+    RwInt32 debugStackDepth;
+    RwBool debugTrace;
+#endif
+    void* curCamera;
+    void* curWorld;
+    RwUInt16 renderFrame;
+    RwUInt16 lightFrame;
+    RwUInt16 pad[2];
+    RwDevice dOpenDevice;
+    RwStandardFunc stdFunc[rwSTANDARDNUMOFSTANDARD];
+    RwLinkList dirtyFrameList;
+    RwStringFunctions stringFuncs;
+    RwMemoryFunctions memoryFuncs;
+#ifdef RWDEBUG
+    RwBool freeListExtraDebug;
+#endif
+    RwMemoryAllocFn memoryAlloc;
+    RwMemoryFreeFn memoryFree;
+    RwMetrics* metrics;
+    RwEngineStatus engineStatus;
+    RwUInt32 resArenaInitSize;
+};
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern void* RwEngineInstance;
+
+#ifdef __cplusplus
+}
+#endif
 
 typedef struct RwResEntry RwResEntry;
 typedef void(*RwResEntryDestroyNotify)(RwResEntry* resEntry);
@@ -586,10 +884,10 @@ extern RwInt32 RwRasterGetNumLevels(RwRaster* raster);
 extern RwRaster* RwRasterSubRaster(RwRaster* subRaster, RwRaster* raster, RwRect* rect);
 extern RwRaster* RwRasterRenderFast(RwRaster* raster, RwInt32 x, RwInt32 y);
 extern RwRaster* RwRasterRender(RwRaster* raster, RwInt32 x, RwInt32 y);
-extern RwRaster* RwRasterPushContext(RwRaster * raster);
+extern RwRaster* RwRasterPushContext(RwRaster* raster);
 extern RwRaster* RwRasterPopContext(void);
 extern RwBool RwRasterClear(RwInt32 pixelValue);
-extern RwRaster* RwRasterShowRaster(RwRaster* raster, void *dev, RwUInt32 flags);
+extern RwRaster* RwRasterShowRaster(RwRaster* raster, void* dev, RwUInt32 flags);
 extern RwUInt8* RwRasterLock(RwRaster* raster, RwUInt8 level, RwInt32 lockMode);
 extern RwRaster* RwRasterUnlock(RwRaster* raster);
 extern RwUInt8* RwRasterLockPalette(RwRaster* raster, RwInt32 lockMode);
@@ -617,6 +915,42 @@ struct RxObjSpace3DVertex
     RwReal v;
 };
 typedef RxObjSpace3DVertex RwIm3DVertex;
+
+#define RwIm3DVertexSetPos(_vert, _imx, _imy, _imz)                                               \
+MACRO_START                                                                                       \
+{                                                                                                 \
+    (_vert)->x = _imx;                                                                            \
+    (_vert)->y = _imy;                                                                            \
+    (_vert)->z = _imz;                                                                            \
+}                                                                                                 \
+MACRO_STOP
+
+#define RwIm3DVertexSetNormal(_vert, _imx, _imy, _imz)                                            \
+MACRO_START                                                                                       \
+{                                                                                                 \
+    (_vert)->nx = _imx;                                                                           \
+    (_vert)->ny = _imy;                                                                           \
+    (_vert)->nz = _imz;                                                                           \
+}                                                                                                 \
+MACRO_STOP
+
+#define RwIm3DVertexSetRGBA(_vert, _r, _g, _b, _a)                                                \
+MACRO_START                                                                                       \
+{                                                                                                 \
+    (_vert)->r = _r;                                                                              \
+    (_vert)->g = _g;                                                                              \
+    (_vert)->b = _b;                                                                              \
+    (_vert)->a = _a;                                                                              \
+}                                                                                                 \
+MACRO_STOP
+
+#define RwIm3DVertexSetUV(_vert, _u, _v)                                                          \
+MACRO_START                                                                                       \
+{                                                                                                 \
+    (_vert)->u = _u;                                                                              \
+    (_vert)->v = _v;                                                                              \
+}                                                                                                 \
+MACRO_STOP
 
 #define rwTEXTUREBASENAMELENGTH 32
 
@@ -658,6 +992,29 @@ extern RwRaster* RwTextureGetRaster(const RwTexture* texture);
 }
 #endif
 
+enum RwIm3DTransformFlags
+{
+    rwIM3D_VERTEXUV = 1,
+    rwIM3D_ALLOPAQUE = 2,
+    rwIM3D_NOCLIP = 4,
+    rwIM3D_VERTEXXYZ = 8,
+    rwIM3D_VERTEXRGBA = 16,
+    rwIM3DTRANSFORMFLAGSFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+typedef enum RwIm3DTransformFlags RwIm3DTransformFlags;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern void* RwIm3DTransform(RwIm3DVertex* pVerts, RwUInt32 numVerts, RwMatrix* ltm, RwUInt32 flags);
+extern RwBool RwIm3DEnd(void);
+extern RwBool RwIm3DRenderPrimitive(RwPrimitiveType primType);
+
+#ifdef __cplusplus
+}
+#endif
+
 struct RwFrame
 {
     RwObject object;
@@ -687,5 +1044,71 @@ struct RwBBox
     RwV3d sup;
     RwV3d inf;
 };
+
+#define RwCameraGetNearClipPlaneMacro(_camera) ((_camera)->nearPlane)
+#define RwCameraGetCurrentCameraMacro() ((RwCamera*)RWSRCGLOBAL(curCamera))
+
+#ifndef RWDEBUG
+#define RwCameraGetNearClipPlane(_camera) RwCameraGetNearClipPlaneMacro(_camera)
+#define RwCameraGetCurrentCamera() RwCameraGetCurrentCameraMacro()
+#endif
+
+enum RwCameraProjection
+{
+    rwNACAMERAPROJECTION = 0,
+    rwPERSPECTIVE = 1,
+    rwPARALLEL = 2,
+    rwCAMERAPROJECTIONFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+typedef enum RwCameraProjection RwCameraProjection;
+
+typedef struct RwCamera RWALIGN(RwCamera, rwMATRIXALIGNMENT);
+typedef RwCamera*(*RwCameraBeginUpdateFunc)(RwCamera* camera);
+typedef RwCamera*(*RwCameraEndUpdateFunc)(RwCamera* camera);
+
+typedef struct RwFrustumPlane RwFrustumPlane;
+struct RwFrustumPlane
+{
+    RwPlane plane;
+    RwUInt8 closestX;
+    RwUInt8 closestY;
+    RwUInt8 closestZ;
+    RwUInt8 pad;
+};
+
+struct RwCamera
+{
+    RwObjectHasFrame object;
+    RwCameraProjection projectionType;
+    RwCameraBeginUpdateFunc beginUpdate;
+    RwCameraEndUpdateFunc endUpdate;
+    RwMatrix viewMatrix;
+    RwRaster* frameBuffer;
+    RwRaster* zBuffer;
+    RwV2d viewWindow;
+    RwV2d recipViewWindow;
+    RwV2d viewOffset;
+    RwReal nearPlane;
+    RwReal farPlane;
+    RwReal fogPlane;
+    RwReal zScale;
+    RwReal zShift;
+    RwFrustumPlane frustumPlanes[6];
+    RwBBox frustumBoundBox;
+    RwV3d frustumCorners[8];
+};
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#ifdef RWDEBUG
+extern RwReal RwCameraGetNearClipPlane(const RwCamera* camera);
+extern RwCamera* RwCameraGetCurrentCamera(void);
+#endif
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
