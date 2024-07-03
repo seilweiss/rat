@@ -476,6 +476,43 @@ struct RwMetrics
     void* devSpecificMetrics;
 };
 
+enum RwVideoModeFlag
+{
+    rwVIDEOMODEEXCLUSIVE = 0x0001,
+    rwVIDEOMODEINTERLACE = 0x0002,
+    rwVIDEOMODEFFINTERLACE = 0x0004,
+    rwVIDEOMODE_PS2_FSAASHRINKBLIT = 0x0100,
+    rwVIDEOMODE_PS2_FSAAREADCIRCUIT = 0x0200,
+    rwVIDEOMODE_XBOX_WIDESCREEN = 0x0100,
+    rwVIDEOMODE_XBOX_PROGRESSIVE = 0x0200,
+    rwVIDEOMODE_XBOX_FIELD = 0x0400,
+    rwVIDEOMODE_XBOX_10X11PIXELASPECT = 0x0800,
+    rwVIDEOMODEFLAGFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+typedef enum RwVideoModeFlag RwVideoModeFlag;
+
+typedef struct RwVideoMode RwVideoMode;
+struct RwVideoMode
+{
+    RwInt32 width;
+    RwInt32 height;
+    RwInt32 depth;
+    RwVideoModeFlag flags;
+    RwInt32 refRate;
+    RwInt32 format;
+};
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern RwVideoMode* RwEngineGetVideoModeInfo(RwVideoMode* modeinfo, RwInt32 modeIndex);
+extern RwInt32 RwEngineGetCurrentVideoMode(void);
+
+#ifdef __cplusplus
+}
+#endif
+
 enum RwDebugType
 {
     rwNADEBUGTYPE = 0,
