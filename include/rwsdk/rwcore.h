@@ -267,6 +267,15 @@ struct RwStringFunctions
     vecSscanfFunc vecSscanf;
 };
 
+enum RwOpCombineType
+{
+    rwCOMBINEREPLACE = 0,
+    rwCOMBINEPRECONCAT,
+    rwCOMBINEPOSTCONCAT,
+    rwOPCOMBINETYPEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+typedef enum RwOpCombineType RwOpCombineType;
+
 struct RwMatrixTag
 {
     RwV3d right;
@@ -301,6 +310,16 @@ typedef rwGameCube2DVertex RwIm2DVertex;
 
 typedef RwUInt16 RxVertexIndex;
 typedef RxVertexIndex RwImVertexIndex;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern RwReal RwV3dNormalize(RwV3d* out, const RwV3d* in);
+
+#ifdef __cplusplus
+}
+#endif
 
 #define RwIm2DVertexSetScreenX(vert, scrnx) ((vert)->x = (scrnx))
 #define RwIm2DVertexSetScreenY(vert, scrny) ((vert)->y = (scrny))
@@ -1147,9 +1166,14 @@ typedef RwFrame*(*RwFrameCallBack)(RwFrame* frame, void* data);
 extern "C" {
 #endif
 
+extern RwFrame* RwFrameTransform(RwFrame* frame, const RwMatrix* m, RwOpCombineType combine);
+
 #ifdef RWDEBUG
 extern RwMatrix* RwFrameGetMatrix(RwFrame* frame);
 #endif
+
+extern RwFrame* RwFrameCreate(void);
+extern RwBool RwFrameDestroy(RwFrame* frame);
 
 #ifdef __cplusplus
 }
@@ -1163,6 +1187,28 @@ struct RwObjectHasFrame
     RwLLLink lFrame;
     RwObjectHasFrameSyncFunction sync;
 };
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern void _rwObjectHasFrameSetFrame(void* object, RwFrame* frame);
+
+#ifdef __cplusplus
+}
+#endif
+
+#define rwObjectHasFrameSetFrame(object, frame) _rwObjectHasFrameSetFrame(object, frame)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern RwBool _rwFrameSyncDirty(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 typedef struct RwBBox RwBBox;
 struct RwBBox
