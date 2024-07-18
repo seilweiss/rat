@@ -14,6 +14,16 @@ struct RpMaterial
     RwInt16 pad;
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern RpMaterial* RpMaterialSetTexture(RpMaterial* material, RwTexture* texture);
+
+#ifdef __cplusplus
+}
+#endif
+
 typedef struct RpMaterialList RpMaterialList;
 struct RpMaterialList
 {
@@ -122,6 +132,48 @@ struct RpGeometry
     RwResEntry* repEntry;
     RpMorphTarget* morphTarget;
 };
+
+#define RpGeometryGetMorphTargetMacro(_geometry, _index) (&((_geometry)->morphTarget[(_index)]))
+#define RpGeometryGetVertexTexCoordsMacro(_geometry, _uvIndex) ((_geometry)->texCoords[(_uvIndex) - 1])
+#define RpGeometryGetNumVerticesMacro(_geometry) ((_geometry)->numVertices)
+#define RpMorphTargetGetVerticesMacro(_mt) ((_mt)->verts)
+#define RpMorphTargetGetVertexNormalsMacro(_mt) ((_mt)->normals)
+#define RpGeometryGetMaterialMacro(_geometry, _num) (((_geometry)->matList.materials)[(_num)])
+#define RpGeometryGetNumMaterialsMacro(_geometry) ((_geometry)->matList.numMaterials)
+
+#ifndef RWDEBUG
+#define RpGeometryGetMorphTarget(_geometry, _index) RpGeometryGetMorphTargetMacro(_geometry, _index)
+#define RpGeometryGetVertexTexCoords(_geometry, _uvIndex) RpGeometryGetVertexTexCoordsMacro(_geometry, _uvIndex)
+#define RpGeometryGetNumVertices(_geometry) RpGeometryGetNumVerticesMacro(_geometry)
+#define RpMorphTargetGetVertices(_mt) RpMorphTargetGetVerticesMacro(_mt)
+#define RpMorphTargetGetVertexNormals(_mt) RpMorphTargetGetVertexNormalsMacro(_mt)
+#define RpGeometryGetMaterial(_geometry, _num) RpGeometryGetMaterialMacro(_geometry, _num)
+#define RpGeometryGetNumMaterials(_geometry) RpGeometryGetNumMaterialsMacro(_geometry)
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#ifdef RWDEBUG
+extern RpMorphTarget* RpGeometryGetMorphTarget(const RpGeometry* geometry, RwInt32 morphTarget);
+extern RwTexCoords* RpGeometryGetVertexTexCoords(const RpGeometry* geometry, RwTextureCoordinateIndex uvIndex);
+extern RwInt32 RpGeometryGetNumVertices(const RpGeometry* geometry);
+extern RwV3d* RpMorphTargetGetVertices(const RpMorphTarget* morphTarget);
+extern RwV3d* RpMorphTargetGetVertexNormals(const RpMorphTarget* morphTarget);
+extern RpMaterial* RpGeometryGetMaterial(const RpGeometry* geometry, RwInt32 matNum);
+#endif
+
+#ifdef RWDEBUG
+extern RwInt32 RpGeometryGetNumMaterials(const RpGeometry* geometry);
+#endif
+
+extern RpGeometry* RpGeometryLock(RpGeometry* geometry, RwInt32 lockMode);
+extern RpGeometry* RpGeometryUnlock(RpGeometry* geometry);
+
+#ifdef __cplusplus
+}
+#endif
 
 typedef struct RpVertexNormal RpVertexNormal;
 struct RpVertexNormal
@@ -287,6 +339,43 @@ struct RpAtomic
     RwLinkList llWorldSectorsInAtomic;
     RxPipeline* pipeline;
 };
+
+#define RpAtomicGetGeometryMacro(_atomic) ((_atomic)->geometry)
+
+#define RpAtomicSetRenderCallBackMacro(_atomic, _callback)              \
+MACRO_START                                                             \
+{                                                                       \
+    (_atomic)->renderCallBack = (_callback);                            \
+    if (!(_atomic)->renderCallBack)                                     \
+    {                                                                   \
+        (_atomic)->renderCallBack = AtomicDefaultRenderCallBack;        \
+    }                                                                   \
+}                                                                       \
+MACRO_STOP
+
+#define RpAtomicGetRenderCallBackMacro(_atomic) ((_atomic)->renderCallBack)
+
+#ifndef RWDEBUG
+#define RpAtomicGetGeometry(_atomic) RpAtomicGetGeometryMacro(_atomic)
+#define RpAtomicSetRenderCallBack(_atomic, _callback) RpAtomicSetRenderCallBackMacro(_atomic, _callback)
+#define RpAtomicGetRenderCallBack(_atomic) RpAtomicGetRenderCallBackMacro(_atomic)
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern RpAtomic* AtomicDefaultRenderCallBack(RpAtomic* atomic);
+
+#ifdef RWDEBUG
+extern RpGeometry* RpAtomicGetGeometry(const RpAtomic* atomic);
+extern void RpAtomicSetRenderCallBack(RpAtomic* atomic, RpAtomicCallBackRender callback);
+extern RpAtomicCallBackRender RpAtomicGetRenderCallBack(const RpAtomic* atomic);
+#endif
+
+#ifdef __cplusplus
+}
+#endif
 
 enum RpWorldRenderOrder
 {
