@@ -340,6 +340,15 @@ struct RpAtomic
     RxPipeline* pipeline;
 };
 
+typedef struct RpTie RpTie;
+struct RpTie
+{
+    RwLLLink lAtomicInWorldSector;
+    RpAtomic* apAtom;
+    RwLLLink lWorldSectorInAtomic;
+    RpWorldSector* worldSector;
+};
+
 #define RpAtomicGetGeometryMacro(_atomic) ((_atomic)->geometry)
 
 #define RpAtomicSetRenderCallBackMacro(_atomic, _callback)              \
