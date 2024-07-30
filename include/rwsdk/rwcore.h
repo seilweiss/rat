@@ -330,6 +330,17 @@ typedef RxVertexIndex RwImVertexIndex;
 extern "C" {
 #endif
 
+void _rwDlRenderStateSetZCompLoc(RwBool zBeforeTex);
+void RwGameCubeSetAlphaCompare(RwInt32 comp0, RwUInt8 ref0, RwInt32 op, RwInt32 comp1, RwUInt8 ref1);
+
+#ifdef __cplusplus
+}
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern RwReal RwV3dNormalize(RwV3d* out, const RwV3d* in);
 
 #ifdef __cplusplus
@@ -401,6 +412,24 @@ enum RwFogType
     rwFOGTYPEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
 };
 typedef enum RwFogType RwFogType;
+
+enum RwBlendFunction
+{
+    rwBLENDNABLEND = 0,
+    rwBLENDZERO,
+    rwBLENDONE,
+    rwBLENDSRCCOLOR,
+    rwBLENDINVSRCCOLOR,
+    rwBLENDSRCALPHA,
+    rwBLENDINVSRCALPHA,
+    rwBLENDDESTALPHA,
+    rwBLENDINVDESTALPHA,
+    rwBLENDDESTCOLOR,
+    rwBLENDINVDESTCOLOR,
+    rwBLENDSRCALPHASAT,
+    rwBLENDFUNCTIONFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+typedef enum RwBlendFunction RwBlendFunction;
 
 enum RwPrimitiveType
 {
@@ -1302,8 +1331,10 @@ struct RwCamera
 extern "C" {
 #endif
 
+extern RwCamera* RwCameraBeginUpdate(RwCamera* camera);
 extern RwCamera* RwCameraEndUpdate(RwCamera* camera);
 extern RwCamera* RwCameraClear(RwCamera* camera, RwRGBA* colour, RwInt32 clearMode);
+extern RwCamera* RwCameraSetNearClipPlane(RwCamera* camera, RwReal nearClip);
 extern RwCamera* RwCameraSetFarClipPlane(RwCamera* camera, RwReal farClip);
 
 #ifdef RWDEBUG
