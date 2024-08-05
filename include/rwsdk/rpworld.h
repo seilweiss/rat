@@ -239,6 +239,15 @@ struct RpLight
     RwUInt16 pad;
 };
 
+typedef struct RpLightTie RpLightTie;
+struct RpLightTie
+{
+    RwLLLink lightInWorldSector;
+    RpLight* light;
+    RwLLLink WorldSectorInLight;
+    RpWorldSector* sect;
+};
+
 #define RpLightSetFrameMacro(_light, _frame) (rwObjectHasFrameSetFrame((_light), (_frame)), (_light))
 #define RpLightGetFrameMacro(_light) ((RwFrame *)rwObjectGetParent((_light)))
 
