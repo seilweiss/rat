@@ -430,6 +430,20 @@ struct RpWorld
 extern "C" {
 #endif
 
+extern RwBool RpWorldDestroy(RpWorld* world);
+extern RpWorld* RpWorldCreate(RwBBox* boundingBox);
+
+#ifdef __cplusplus
+}
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern RpWorld* RpWorldRemoveCamera(RpWorld* world, RwCamera* camera);
+extern RpWorld* RpWorldAddCamera(RpWorld* world, RwCamera* camera);
+
 extern RpWorld* RpWorldAddLight(RpWorld* world, RpLight* light);
 extern RpWorld* RpWorldRemoveLight(RpWorld* world, RpLight* light);
 

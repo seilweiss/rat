@@ -291,6 +291,23 @@ enum RwOpCombineType
 };
 typedef enum RwOpCombineType RwOpCombineType;
 
+enum RwMatrixType
+{
+    rwMATRIXTYPENORMAL = 0x00000001,
+    rwMATRIXTYPEORTHOGONAL = 0x00000002,
+    rwMATRIXTYPEORTHONORMAL = 0x00000003,
+    rwMATRIXTYPEMASK = 0x00000003,
+    rwMATRIXTYPEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+typedef enum RwMatrixType RwMatrixType;
+
+enum RwMatrixFlag
+{
+    rwMATRIXINTERNALIDENTITY = 0x00020000,
+    rwMATRIXFLAGFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+typedef enum RwMatrixFlag RwMatrixFlag;
+
 struct RwMatrixTag
 {
     RwV3d right;
@@ -402,6 +419,19 @@ enum RwRenderState
     rwRENDERSTATEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
 };
 typedef enum RwRenderState RwRenderState;
+
+enum RwTextureFilterMode
+{
+    rwFILTERNAFILTERMODE = 0,
+    rwFILTERNEAREST,
+    rwFILTERLINEAR,
+    rwFILTERMIPNEAREST,
+    rwFILTERMIPLINEAR,
+    rwFILTERLINEARMIPNEAREST,
+    rwFILTERLINEARMIPLINEAR,
+    rwTEXTUREFILTERMODEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+typedef enum RwTextureFilterMode RwTextureFilterMode;
 
 enum RwFogType
 {
@@ -1125,6 +1155,11 @@ MACRO_STOP
 
 #define rwTEXTUREBASENAMELENGTH 32
 
+#define rwTEXTUREFILTERMODEMASK 0x000000FF
+#define rwTEXTUREADDRESSINGUMASK 0x00000F00
+#define rwTEXTUREADDRESSINGVMASK 0x0000F000
+#define rwTEXTUREADDRESSINGMASK (rwTEXTUREADDRESSINGUMASK | rwTEXTUREADDRESSINGVMASK)
+
 typedef struct RwTexDictionary RwTexDictionary;
 struct RwTexDictionary
 {
@@ -1147,16 +1182,27 @@ struct RwTexture
 
 #define RwTextureGetRasterMacro(_tex) ((_tex)->raster)
 
+#define RwTextureSetFilterModeMacro(_tex, _filtering)                       \
+    (((_tex)->filterAddressing =                                            \
+      ((_tex)->filterAddressing & ~rwTEXTUREFILTERMODEMASK) |               \
+      (((RwUInt32)(_filtering)) &  rwTEXTUREFILTERMODEMASK)),               \
+     (_tex))
+
 #ifndef RWDEBUG
 #define RwTextureGetRaster(_tex) RwTextureGetRasterMacro(_tex)
+#define RwTextureSetFilterMode(_tex, _filtering) RwTextureSetFilterModeMacro(_tex, _filtering)
 #endif
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+extern RwTexture* RwTextureCreate(RwRaster* raster);
+extern RwBool RwTextureDestroy(RwTexture* texture);
+
 #ifdef RWDEBUG
 extern RwRaster* RwTextureGetRaster(const RwTexture* texture);
+extern RwTexture* RwTextureSetFilterMode(RwTexture* texture, RwTextureFilterMode filtering);
 #endif
 
 #ifdef __cplusplus
@@ -1212,6 +1258,8 @@ extern "C" {
 
 extern RwFrame* RwFrameTransform(RwFrame* frame, const RwMatrix* m, RwOpCombineType combine);
 
+extern RwMatrix* RwFrameGetLTM(RwFrame* frame);
+
 #ifdef RWDEBUG
 extern RwMatrix* RwFrameGetMatrix(RwFrame* frame);
 #endif
@@ -1261,15 +1309,31 @@ struct RwBBox
     RwV3d inf;
 };
 
+#define RwCameraGetViewOffsetMacro(_camera) (&((_camera)->viewOffset))
+#define RwCameraSetRasterMacro(_camera, _raster) (((_camera)->frameBuffer = (_raster)), (_camera))
+#define RwCameraGetRasterMacro(_camera) ((_camera)->frameBuffer)
 #define RwCameraGetNearClipPlaneMacro(_camera) ((_camera)->nearPlane)
 #define RwCameraGetFarClipPlaneMacro(_camera) ((_camera)->farPlane)
+#define RwCameraSetFogDistanceMacro(_camera, _distance) (((_camera)->fogPlane = (_distance)), (_camera))
+#define RwCameraGetFogDistanceMacro(_camera) ((_camera)->fogPlane)
 #define RwCameraGetCurrentCameraMacro() ((RwCamera*)RWSRCGLOBAL(curCamera))
+#define RwCameraGetProjectionMacro(_camera) ((_camera)->projectionType)
+#define RwCameraGetViewWindowMacro(_camera) (&((_camera)->viewWindow))
+#define RwCameraSetFrameMacro(_camera, _frame) (_rwObjectHasFrameSetFrame((_camera), (_frame)), (_camera))
 #define RwCameraGetFrameMacro(_camera) ((RwFrame *)rwObjectGetParent((_camera)))
 
 #ifndef RWDEBUG
+#define RwCameraGetViewOffset(_camera) RwCameraGetViewOffsetMacro(_camera)
+#define RwCameraSetRaster(_camera, _raster) RwCameraSetRasterMacro(_camera, _raster)
+#define RwCameraGetRaster(_camera) RwCameraGetRasterMacro(_camera)
 #define RwCameraGetNearClipPlane(_camera) RwCameraGetNearClipPlaneMacro(_camera)
 #define RwCameraGetFarClipPlane(_camera) RwCameraGetFarClipPlaneMacro(_camera)
+#define RwCameraSetFogDistance(_camera, _distance) RwCameraSetFogDistanceMacro(_camera, _distance)
+#define RwCameraGetFogDistance(_camera) RwCameraGetFogDistanceMacro(_camera)
 #define RwCameraGetCurrentCamera() RwCameraGetCurrentCameraMacro()
+#define RwCameraGetProjection(_camera) RwCameraGetProjectionMacro(_camera)
+#define RwCameraGetViewWindow(_camera) RwCameraGetViewWindowMacro(_camera)
+#define RwCameraSetFrame(_camera, _frame) RwCameraSetFrameMacro(_camera, _frame)
 #define RwCameraGetFrame(_camera) RwCameraGetFrameMacro(_camera)
 #endif
 
@@ -1334,13 +1398,26 @@ extern "C" {
 extern RwCamera* RwCameraBeginUpdate(RwCamera* camera);
 extern RwCamera* RwCameraEndUpdate(RwCamera* camera);
 extern RwCamera* RwCameraClear(RwCamera* camera, RwRGBA* colour, RwInt32 clearMode);
+extern RwBool RwCameraDestroy(RwCamera* camera);
+extern RwCamera* RwCameraCreate(void);
+extern RwCamera* RwCameraSetViewOffset(RwCamera* camera, const RwV2d* offset);
+extern RwCamera* RwCameraSetViewWindow(RwCamera* camera, const RwV2d* viewWindow);
+extern RwCamera* RwCameraSetProjection(RwCamera* camera, RwCameraProjection projection);
 extern RwCamera* RwCameraSetNearClipPlane(RwCamera* camera, RwReal nearClip);
 extern RwCamera* RwCameraSetFarClipPlane(RwCamera* camera, RwReal farClip);
 
 #ifdef RWDEBUG
+extern const RwV2d* RwCameraGetViewOffset(const RwCamera* camera);
+extern RwCamera* RwCameraSetRaster(RwCamera* camera, RwRaster* raster);
+extern RwRaster* RwCameraGetRaster(const RwCamera* camera);
 extern RwReal RwCameraGetNearClipPlane(const RwCamera* camera);
 extern RwReal RwCameraGetFarClipPlane(const RwCamera* camera);
+extern RwCamera* RwCameraSetFogDistance(RwCamera* camera, RwReal fogDistance);
+extern RwReal RwCameraGetFogDistance(const RwCamera* camera);
 extern RwCamera* RwCameraGetCurrentCamera(void);
+extern RwCameraProjection RwCameraGetProjection(const RwCamera* camera);
+extern const RwV2d* RwCameraGetViewWindow(const RwCamera* camera);
+extern RwCamera* RwCameraSetFrame(RwCamera* camera, RwFrame* frame);
 extern RwFrame* RwCameraGetFrame(const RwCamera* camera);
 #endif
 
