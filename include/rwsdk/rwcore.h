@@ -129,12 +129,135 @@ struct RwSurfaceProperties
     RwReal diffuse;
 };
 
+#define RWRGBALONG(r,g,b,a) ((RwUInt32) (((a) << 24) | ((r) << 16) | ((g) << 8) | (b)))
+
 typedef struct RwPlane RwPlane;
 struct RwPlane
 {
     RwV3d normal;
     RwReal distance;
 };
+
+#define MAKECHUNKID(vendorID, chunkID) (((vendorID & 0xFFFFFF) << 8) | (chunkID & 0xFF))
+
+enum RwPluginVendor
+{
+    rwVENDORID_CORE = 0x000000L,
+    rwVENDORID_CRITERIONTK = 0x000001L,
+    rwVENDORID_REDLINERACER = 0x000002L,
+    rwVENDORID_CSLRD = 0x000003L,
+    rwVENDORID_CRITERIONINT = 0x000004L,
+    rwVENDORID_CRITERIONWORLD = 0x000005L,
+    rwVENDORID_BETA = 0x000006L,
+    rwVENDORID_CRITERIONRM = 0x000007L,
+    rwVENDORID_CRITERIONRWA = 0x000008L,
+    rwVENDORID_CRITERIONRWP = 0x000009L,
+    rwPLUGINVENDORFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+typedef enum RwPluginVendor RwPluginVendor;
+
+enum RwCorePluginID
+{
+    rwID_NAOBJECT = MAKECHUNKID(rwVENDORID_CORE, 0x00),
+    rwID_STRUCT = MAKECHUNKID(rwVENDORID_CORE, 0x01),
+    rwID_STRING = MAKECHUNKID(rwVENDORID_CORE, 0x02),
+    rwID_EXTENSION = MAKECHUNKID(rwVENDORID_CORE, 0x03),
+    rwID_CAMERA = MAKECHUNKID(rwVENDORID_CORE, 0x05),
+    rwID_TEXTURE = MAKECHUNKID(rwVENDORID_CORE, 0x06),
+    rwID_MATERIAL = MAKECHUNKID(rwVENDORID_CORE, 0x07),
+    rwID_MATLIST = MAKECHUNKID(rwVENDORID_CORE, 0x08),
+    rwID_ATOMICSECT = MAKECHUNKID(rwVENDORID_CORE, 0x09),
+    rwID_PLANESECT = MAKECHUNKID(rwVENDORID_CORE, 0x0A),
+    rwID_WORLD = MAKECHUNKID(rwVENDORID_CORE, 0x0B),
+    rwID_SPLINE = MAKECHUNKID(rwVENDORID_CORE, 0x0C),
+    rwID_MATRIX = MAKECHUNKID(rwVENDORID_CORE, 0x0D),
+    rwID_FRAMELIST = MAKECHUNKID(rwVENDORID_CORE, 0x0E),
+    rwID_GEOMETRY = MAKECHUNKID(rwVENDORID_CORE, 0x0F),
+    rwID_CLUMP = MAKECHUNKID(rwVENDORID_CORE, 0x10),
+    rwID_LIGHT = MAKECHUNKID(rwVENDORID_CORE, 0x12),
+    rwID_UNICODESTRING = MAKECHUNKID(rwVENDORID_CORE, 0x13),
+    rwID_ATOMIC = MAKECHUNKID(rwVENDORID_CORE, 0x14),
+    rwID_TEXTURENATIVE = MAKECHUNKID(rwVENDORID_CORE, 0x15),
+    rwID_TEXDICTIONARY = MAKECHUNKID(rwVENDORID_CORE, 0x16),
+    rwID_ANIMDATABASE = MAKECHUNKID(rwVENDORID_CORE, 0x17),
+    rwID_IMAGE = MAKECHUNKID(rwVENDORID_CORE, 0x18),
+    rwID_SKINANIMATION = MAKECHUNKID(rwVENDORID_CORE, 0x19),
+    rwID_GEOMETRYLIST = MAKECHUNKID(rwVENDORID_CORE, 0x1A),
+    rwID_ANIMANIMATION = MAKECHUNKID(rwVENDORID_CORE, 0x1B),
+    rwID_HANIMANIMATION = MAKECHUNKID(rwVENDORID_CORE, 0x1B),
+    rwID_TEAM = MAKECHUNKID(rwVENDORID_CORE, 0x1C),
+    rwID_CROWD = MAKECHUNKID(rwVENDORID_CORE, 0x1D),
+    rwID_DMORPHANIMATION = MAKECHUNKID(rwVENDORID_CORE, 0x1E),
+    rwID_RIGHTTORENDER = MAKECHUNKID(rwVENDORID_CORE, 0x1f),
+    rwID_MTEFFECTNATIVE = MAKECHUNKID(rwVENDORID_CORE, 0x20),
+    rwID_MTEFFECTDICT = MAKECHUNKID(rwVENDORID_CORE, 0x21),
+    rwID_TEAMDICTIONARY = MAKECHUNKID(rwVENDORID_CORE, 0x22),
+    rwID_PITEXDICTIONARY = MAKECHUNKID(rwVENDORID_CORE, 0x23),
+    rwID_TOC = MAKECHUNKID(rwVENDORID_CORE, 0x24),
+    rwID_PRTSTDGLOBALDATA = MAKECHUNKID(rwVENDORID_CORE, 0x25),
+    rwID_ALTPIPE = MAKECHUNKID(rwVENDORID_CORE, 0x26),
+    rwID_PIPEDS = MAKECHUNKID(rwVENDORID_CORE, 0x27),
+    rwID_PATCHMESH = MAKECHUNKID(rwVENDORID_CORE, 0x28),
+    rwID_CHUNKGROUPSTART = MAKECHUNKID(rwVENDORID_CORE, 0x29),
+    rwID_CHUNKGROUPEND = MAKECHUNKID(rwVENDORID_CORE, 0x2A),
+    rwID_UVANIMDICT = MAKECHUNKID(rwVENDORID_CORE, 0x2B),
+    rwID_COLLTREE = MAKECHUNKID(rwVENDORID_CORE, 0x2C),
+    rwID_ENVIRONMENT = MAKECHUNKID(rwVENDORID_CORE, 0x2D),
+    rwID_COREPLUGINIDMAX = MAKECHUNKID(rwVENDORID_CORE, 0x2E),
+    rwCOREPLUGINIDFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+typedef enum RwCorePluginID RwCorePluginID;
+
+enum RwCriterionPluginID
+{
+    rwID_COREPLUGIN = 0x01,
+    rwID_WORLDPLUGIN = 0x02,
+    rwID_TOOLPLUGIN = 0x03,
+    rwID_TOOL2PLUGIN = 0x04,
+    rwCRITERIONPLUGINIDFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+typedef enum RwCriterionPluginID RwCriterionPluginID;
+
+enum RwCriterionCoreID
+{
+    rwID_NACOREID = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x00),
+    rwID_VECTORMODULE = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x01),
+    rwID_MATRIXMODULE = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x02),
+    rwID_FRAMEMODULE = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x03),
+    rwID_STREAMMODULE = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x04),
+    rwID_CAMERAMODULE = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x05),
+    rwID_IMAGEMODULE = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x06),
+    rwID_RASTERMODULE = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x07),
+    rwID_TEXTUREMODULE = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x08),
+    rwID_PIPEMODULE = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x09),
+    rwID_IMMEDIATEMODULE = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x0A),
+    rwID_RESOURCESMODULE = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x0B),
+    rwID_DEVICEMODULE = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x0C),
+    rwID_COLORMODULE = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x0D),
+    rwID_POLYPIPEMODULE = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x0E),
+    rwID_ERRORMODULE = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x0F),
+    rwID_METRICSMODULE = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x10),
+    rwID_DRIVERMODULE = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x11),
+    rwID_CHUNKGROUPMODULE = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x12),
+    rwCRITERIONCOREIDFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+typedef enum RwCriterionCoreID RwCriterionCoreID;
+
+enum RwPlatformID
+{
+    rwID_PCD3D7 = 1,
+    rwID_PCOGL,
+    rwID_MAC,
+    rwID_PS2,
+    rwID_XBOX,
+    rwID_GAMECUBE,
+    rwID_SOFTRAS,
+    rwID_PCD3D8,
+    rwID_PCD3D9,
+    rwID_PSP,
+    rwPLATFROMIDFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+typedef enum RwPlatformID RwPlatformID;
 
 typedef struct RwObject RwObject;
 struct RwObject
@@ -1257,12 +1380,15 @@ extern "C" {
 #endif
 
 extern RwFrame* RwFrameTransform(RwFrame* frame, const RwMatrix* m, RwOpCombineType combine);
+extern RwFrame* RwFrameOrthoNormalize(RwFrame* frame);
 
 extern RwMatrix* RwFrameGetLTM(RwFrame* frame);
 
 #ifdef RWDEBUG
 extern RwMatrix* RwFrameGetMatrix(RwFrame* frame);
 #endif
+
+extern RwFrame* RwFrameUpdateObjects(RwFrame* frame);
 
 extern RwFrame* RwFrameCreate(void);
 extern RwBool RwFrameDestroy(RwFrame* frame);
@@ -1312,6 +1438,8 @@ struct RwBBox
 #define RwCameraGetViewOffsetMacro(_camera) (&((_camera)->viewOffset))
 #define RwCameraSetRasterMacro(_camera, _raster) (((_camera)->frameBuffer = (_raster)), (_camera))
 #define RwCameraGetRasterMacro(_camera) ((_camera)->frameBuffer)
+#define RwCameraSetZRasterMacro(_camera, _raster) (((_camera)->zBuffer = (_raster)), (_camera))
+#define RwCameraGetZRasterMacro(_camera) ((_camera)->zBuffer)
 #define RwCameraGetNearClipPlaneMacro(_camera) ((_camera)->nearPlane)
 #define RwCameraGetFarClipPlaneMacro(_camera) ((_camera)->farPlane)
 #define RwCameraSetFogDistanceMacro(_camera, _distance) (((_camera)->fogPlane = (_distance)), (_camera))
@@ -1319,6 +1447,7 @@ struct RwBBox
 #define RwCameraGetCurrentCameraMacro() ((RwCamera*)RWSRCGLOBAL(curCamera))
 #define RwCameraGetProjectionMacro(_camera) ((_camera)->projectionType)
 #define RwCameraGetViewWindowMacro(_camera) (&((_camera)->viewWindow))
+#define RwCameraGetViewMatrixMacro(_camera) (&((_camera)->viewMatrix))
 #define RwCameraSetFrameMacro(_camera, _frame) (_rwObjectHasFrameSetFrame((_camera), (_frame)), (_camera))
 #define RwCameraGetFrameMacro(_camera) ((RwFrame *)rwObjectGetParent((_camera)))
 
@@ -1326,6 +1455,8 @@ struct RwBBox
 #define RwCameraGetViewOffset(_camera) RwCameraGetViewOffsetMacro(_camera)
 #define RwCameraSetRaster(_camera, _raster) RwCameraSetRasterMacro(_camera, _raster)
 #define RwCameraGetRaster(_camera) RwCameraGetRasterMacro(_camera)
+#define RwCameraSetZRaster(_camera, _raster) RwCameraSetZRasterMacro(_camera, _raster)
+#define RwCameraGetZRaster(_camera) RwCameraGetZRasterMacro(_camera)
 #define RwCameraGetNearClipPlane(_camera) RwCameraGetNearClipPlaneMacro(_camera)
 #define RwCameraGetFarClipPlane(_camera) RwCameraGetFarClipPlaneMacro(_camera)
 #define RwCameraSetFogDistance(_camera, _distance) RwCameraSetFogDistanceMacro(_camera, _distance)
@@ -1333,6 +1464,7 @@ struct RwBBox
 #define RwCameraGetCurrentCamera() RwCameraGetCurrentCameraMacro()
 #define RwCameraGetProjection(_camera) RwCameraGetProjectionMacro(_camera)
 #define RwCameraGetViewWindow(_camera) RwCameraGetViewWindowMacro(_camera)
+#define RwCameraGetViewMatrix(_camera) RwCameraGetViewMatrixMacro(_camera)
 #define RwCameraSetFrame(_camera, _frame) RwCameraSetFrameMacro(_camera, _frame)
 #define RwCameraGetFrame(_camera) RwCameraGetFrameMacro(_camera)
 #endif
@@ -1398,6 +1530,7 @@ extern "C" {
 extern RwCamera* RwCameraBeginUpdate(RwCamera* camera);
 extern RwCamera* RwCameraEndUpdate(RwCamera* camera);
 extern RwCamera* RwCameraClear(RwCamera* camera, RwRGBA* colour, RwInt32 clearMode);
+extern RwCamera* RwCameraShowRaster(RwCamera* camera, void* pDev, RwUInt32 flags);
 extern RwBool RwCameraDestroy(RwCamera* camera);
 extern RwCamera* RwCameraCreate(void);
 extern RwCamera* RwCameraSetViewOffset(RwCamera* camera, const RwV2d* offset);
@@ -1405,11 +1538,14 @@ extern RwCamera* RwCameraSetViewWindow(RwCamera* camera, const RwV2d* viewWindow
 extern RwCamera* RwCameraSetProjection(RwCamera* camera, RwCameraProjection projection);
 extern RwCamera* RwCameraSetNearClipPlane(RwCamera* camera, RwReal nearClip);
 extern RwCamera* RwCameraSetFarClipPlane(RwCamera* camera, RwReal farClip);
+extern RwInt32 RwCameraGetPluginOffset(RwUInt32 pluginID);
 
 #ifdef RWDEBUG
 extern const RwV2d* RwCameraGetViewOffset(const RwCamera* camera);
 extern RwCamera* RwCameraSetRaster(RwCamera* camera, RwRaster* raster);
 extern RwRaster* RwCameraGetRaster(const RwCamera* camera);
+extern RwCamera* RwCameraSetZRaster(RwCamera* camera, RwRaster* zRaster);
+extern RwRaster* RwCameraGetZRaster(const RwCamera* camera);
 extern RwReal RwCameraGetNearClipPlane(const RwCamera* camera);
 extern RwReal RwCameraGetFarClipPlane(const RwCamera* camera);
 extern RwCamera* RwCameraSetFogDistance(RwCamera* camera, RwReal fogDistance);
@@ -1417,6 +1553,7 @@ extern RwReal RwCameraGetFogDistance(const RwCamera* camera);
 extern RwCamera* RwCameraGetCurrentCamera(void);
 extern RwCameraProjection RwCameraGetProjection(const RwCamera* camera);
 extern const RwV2d* RwCameraGetViewWindow(const RwCamera* camera);
+extern RwMatrix* RwCameraGetViewMatrix(RwCamera* camera);
 extern RwCamera* RwCameraSetFrame(RwCamera* camera, RwFrame* frame);
 extern RwFrame* RwCameraGetFrame(const RwCamera* camera);
 #endif
