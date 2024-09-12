@@ -1422,7 +1422,7 @@ config.libs = [
             Object(Matching, "rwsdk/src/pipe/p2/p2define.c"),
             Object(Matching, "rwsdk/src/pipe/p2/p2dep.c"),
             Object(Matching, "rwsdk/src/pipe/p2/p2heap.c"),
-            Object(NonMatching, "rwsdk/src/pipe/p2/p2renderstate.c"),
+            Object(Matching, "rwsdk/src/pipe/p2/p2renderstate.c"),
             Object(NonMatching, "rwsdk/src/pipe/p2/p2resort.c"),
             Object(NonMatching, "rwsdk/src/pipe/p2/gcn/im3dpipe.c"),
             Object(NonMatching, "rwsdk/src/pipe/p2/gcn/nodeDolphinSubmitNoLight.c"),
