@@ -1376,7 +1376,7 @@ config.libs = [
         [
             Object(Matching, "rwsdk/src/plcore/babinary.c"),
             Object(Matching, "rwsdk/src/plcore/bacolor.c"),
-            Object(NonMatching, "rwsdk/src/plcore/badebug.c"),
+            Object(Matching, "rwsdk/src/plcore/badebug.c"),
             Object(Matching, "rwsdk/src/plcore/baerr.c"),
             Object(NonMatching, "rwsdk/src/plcore/baimmedi.c"),
             Object(NonMatching, "rwsdk/src/plcore/bamatrix.c"),
