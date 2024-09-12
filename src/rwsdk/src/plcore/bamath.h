@@ -232,69 +232,6 @@ do                                                                       \
 }                                                                        \
 while(0)
 
-#if (defined(PSP_OSTYPES_H))
-/*
- * PSP versions of these SPF macros are defined
- * in the PSP version of ostypes.h (above)...
- */
-#define RwACos(_x)              _rwPspACos(_x)           
-#define RwACosh(_x)             _rwPspACosh(_x)          
-#define RwASin(_x)              _rwPspASin(_x)           
-#define RwASinh(_x)             _rwPspASinh(_x)          
-#define RwATan2(_x, _y)         _rwPspATan2(_x, _y)      
-#define RwATan(_x)              _rwPspATan(_x)           
-#define RwATanh(_x)             _rwPspATanh(_x)          
-#define RwCabs()                _rwPspCabs()             
-#define RwCbrt(_x)              _rwPspCbrt(_x)           
-#define RwCeil(_x)              _rwPspCeil(_x)           
-#define RwCopysign(_x, _y)      _rwPspCopysign(_x, _y)   
-#define RwCos(_x)               _rwPspCos(_x)            
-#define RwCosh(_x)              _rwPspCosh(_x)           
-#define RwDrem(_x, _y)          _rwPspDrem(_x, _y)       
-#define RwErfc(_x)              _rwPspErfc(_x)           
-#define RwErf(_x)               _rwPspErf(_x)            
-#define RwExp(_x)               _rwPspExp(_x)            
-#define RwExpm1(_x)             _rwPspExpm1(_x)          
-#define RwFinite(_x)            _rwPspFinite(_x)         
-#define RwIlogb(_x)             _rwPspIlogb(_x)          
-#define RwIsinf(_x)             _rwPspIsinf(_x)          
-#define RwIsnan(_x)             _rwPspIsnan(_x)          
-#define RwFabs(_x)              _rwPspFabs(_x)           
-#define RwFloor(_x)             _rwPspFloor(_x)          
-#define RwFmod(_x, _y)          _rwPspFmod(_x, _y)       
-#define RwFrexp(_x, _iptr)      _rwPspFrexp(_x, _iptr)   
-#define RwGamma(_x)             _rwPspGamma(_x)          
-#define RwGammaf_(_x, _iptr)    _rwPspGammaf_(_x, _iptr) 
-#define RwHypot(_x, _y)         _rwPspHypot(_x, _y)      
-#define RwInfinity()            _rwPspInfinity()         
-#define RwJ0(_x)                _rwPspJ0(_x)             
-#define RwJ1(_x)                _rwPspJ1(_x)             
-#define RwJn(_i, _x)            _rwPspJn(_i, _x)         
-#define RwLdexp(_x, _i)         _rwPspLdexp(_x, _i)      
-#define RwLgamma(_x)            _rwPspLgamma(_x)         
-#define RwLgammaf_(_x, _iptr)   _rwPspLgammaf_(_x, _iptr)
-#define RwLog10(_x)             _rwPspLog10(_x)          
-#define RwLog1p(_x)             _rwPspLog1p(_x)          
-#define RwLog(_x)               _rwPspLog(_x)            
-#define RwModf(_x, _y)          _rwPspModf(_x, _y)       
-#define RwNan()                 _rwPspNan()              
-#define RwNextafter(_x, _y)     _rwPspNextafter(_x, _y)  
-#define RwPow(_x, _y)           _rwPspPow(_x, _y)        
-#define RwRemainder(_x, _y)     _rwPspRemainder(_x, _y)  
-#define RwRint(_x)              _rwPspRint(_x)           
-#define RwScalbn(_x, _i)        _rwPspScalbn(_x, _i)     
-#define RwSin(_x)               _rwPspSin(_x)            
-#define RwSinh(_x)              _rwPspSinh(_x)           
-#define RwTan(_x)               _rwPspTan(_x)            
-#define RwTanh(_x)              _rwPspTanh(_x)           
-#define RwY0(_x)                _rwPspY0(_x)             
-#define RwY1(_x)                _rwPspY1(_x)             
-#define RwYn(_i, _x)            _rwPspYn(_i, _x)         
-
-#define rwSqrt(_result, _x)     rwSqrtMacro(_result, _x)
-
-#else /* (defined(PSP_OSTYPES_H)) */
-
 #if (defined(RW_USE_SPF))
 
 #define RwACos(_x)              acosf(_x)
@@ -535,8 +472,6 @@ while(0)
 #if (!defined(RwYn))
 #define RwYn(_i, _x)            yn(_i, _x)
 #endif /* (!defined(RwYn)) */
-
-#endif /* (defined(PSP_OSTYPES_H)) */
 
 /* RWPUBLICEND */
 #endif /* RWMATH_H */

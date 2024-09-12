@@ -97,7 +97,7 @@ validate_vertices(void *indices, RwInt32 numIndices, RwInt32 numVertices)
     RWASSERT(0 <= numIndices);
     RWASSERT((0 == numIndices) || (NULL != indices));
 
-    for (i = 0; i < numIndices; ++i)
+    for (i = 0; i < numIndices; i++)
     {
         const RxVertexIndex vertIndex = vertArray[i];
         const RwBool        validIndex =
@@ -1244,7 +1244,7 @@ _rwIm3DClose(void *instance, RwInt32 __RWUNUSED__ offset,
     _rwIm3DDestroyPlatformTransformPipeline(
         &(RWIMMEDIGLOBAL(platformIm3DTransformPipeline)));
 
-    --_rwIm3DModule.numInstances;
+    _rwIm3DModule.numInstances--;
 
 #endif /* (!defined(SUPPRESS_IM3D)) */
 
@@ -1274,7 +1274,7 @@ _rwIm3DOpen(void *instance, RwInt32 offset, RwInt32 size)
         (rwImmediGlobals *) & RWIMMEDIGLOBAL(im3DTransformPipeline);
 
     /* One more module instance */
-    ++_rwIm3DModule.numInstances;
+    _rwIm3DModule.numInstances++;
 
     /* Pipes and curPool initialised to NULL/0 */
     memset(&(RWIMMEDIGLOBAL(im3DTransformPipeline)), 0,

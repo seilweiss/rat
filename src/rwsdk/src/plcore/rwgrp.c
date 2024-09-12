@@ -108,7 +108,7 @@ _rwChunkGroupOpen(void *instance,
     }
 
     /* One more module instance */
-    ++chunkGroupModule.numInstances;
+    chunkGroupModule.numInstances++;
 
     RWRETURN(instance);
 }
@@ -131,7 +131,7 @@ _rwChunkGroupClose(void *instance,
     }
 
     /* One less module instance */
-    --chunkGroupModule.numInstances;
+    chunkGroupModule.numInstances--;
 
     /* All done */
     RWRETURN(instance);
@@ -525,9 +525,9 @@ RwChunkGroupSetName( RwChunkGroup *grp, const RwChar * name)
             {
                 RwChar      msg[80];
 
-                sprintf(msg, RWSTRING("Name must be less than %d characters."), rwCHUNKGROUPMAXNAME);
+                sprintf(msg, "Name must be less than %d characters.", rwCHUNKGROUPMAXNAME);
 
-                RWMESSAGE((msg));
+                RWMESSAGE((RWSTRING(msg)));
             }
 #endif /* RWDEBUG */
 

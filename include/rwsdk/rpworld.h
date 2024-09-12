@@ -8,12 +8,15 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
+#include "bapipew.h"
+#include "babinwor.h"
 #include "baclump.h"
 #include "bageomet.h"
 #include "balight.h"
 #include "bamateri.h"
 #include "bamatlst.h"
 #include "bamesh.h"
+#include "bameshop.h"
 #include "basector.h"
 #include "baworld.h"
 #include "baworobj.h"

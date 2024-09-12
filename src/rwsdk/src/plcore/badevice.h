@@ -134,13 +134,11 @@ typedef enum RwCoreDeviceSystemFn RwCoreDeviceSystemFn;
 #define rwDEVICE_SKY2    (6)
 #define rwDEVICE_SOFTRAS (7)
 #define rwDEVICE_XBOX    (8)
-#define rwDEVICE_PSP     (9)
 
 #define rwDEVICE_NULLxxx  (0x100)
 #define rwDEVICE_NULLGCN  (rwDEVICE_NULLxxx | rwDEVICE_GCN)
 #define rwDEVICE_NULLSKY  (rwDEVICE_NULLxxx | rwDEVICE_SKY2)
 #define rwDEVICE_NULLXBOX (rwDEVICE_NULLxxx | rwDEVICE_XBOX)
-#define rwDEVICE_NULLPSP  (rwDEVICE_NULLxxx | rwDEVICE_PSP)
 
 /****************************************************************************
  Global Types
@@ -294,7 +292,6 @@ struct RwMetrics
      * \if xbox The number of textures used. \endif
      * \if gcn The number of textures used. \endif
      * \if softras The number of times the \ref rwRENDERSTATETEXTURERASTER renderstate
-     * \if psp The number of times SCE_GE_CMD_TFLUSH is sent to the GPU.  \endif
      * is set with a valid (non-NULL) texture. \endif
      */
     RwUInt32    sizeTextureUploads;
@@ -306,7 +303,6 @@ struct RwMetrics
      * \if xbox Size of textures swapped. \endif
      * \if gcn Size of textures swapped. \endif
      * \if softras The size of the textures, in bytes, that have been set with
-     * \if psp The size of the textures, in bytes, that have been passed to RwPspDLTexImage. \endif
      * the \ref rwRENDERSTATETEXTURERASTER renderstate. \endif
      */
     RwUInt32    numResourceAllocs;      /**< The number of resource blocks swapped. */

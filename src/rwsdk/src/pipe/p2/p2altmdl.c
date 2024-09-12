@@ -111,12 +111,12 @@ rxPacketCrossPipelineAlignClusters(RxPacket * packet,
      * allow me to iterate over _packet_ clusters pulling
      * corresponding cluster from _oldPacket_ */
 
-    for (i = 0; i < toPipeline->numInputRequirements; ++i)
+    for (i = 0; i < toPipeline->numInputRequirements; i++)
     {
         RxPipelineRequiresCluster *reqdCluster =
             &toPipeline->inputRequirements[i];
 
-        for (j = 0; j < oldPacket->numClusters; ++j)
+        for (j = 0; j < oldPacket->numClusters; j++)
         {
             /* match...? then break */
             if ((oldPacket->clusters[j].clusterRef != NULL) &&

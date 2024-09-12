@@ -205,10 +205,10 @@ PipelineCalcNumUniqueClusters(RxPipeline *pipeline)
         lastAddress = newAddress;
         newAddress  = (RxClusterDefinition *)0xFFFFFFFF;
 
-        for (i = 0;i < pipeline->numNodes;++i)
+        for (i = 0;i < pipeline->numNodes;i++)
         {
             RxNodeDefinition *nodeDef = pipeline->nodes[i].nodeDef;
-            for (j = 0;j < nodeDef->io.numClustersOfInterest;++j)
+            for (j = 0;j < nodeDef->io.numClustersOfInterest;j++)
             {
                 RxClusterDefinition *address;
                 address = nodeDef->io.clustersOfInterest[j].clusterDef;
@@ -223,7 +223,7 @@ PipelineCalcNumUniqueClusters(RxPipeline *pipeline)
         /* This will correctly deal with pipes with */
         /* no nodes and/or no clusters of interest. */
         if (newAddress == (RxClusterDefinition *)0xFFFFFFFF) break;
-        ++numUniqueClusters;
+        numUniqueClusters++;
     }
 
     RWRETURN(numUniqueClusters);
@@ -265,7 +265,7 @@ ReallocAndFixupSuperBlock(RxPipeline *pipeline, RwUInt32 newSize)
                 RxPipelineRequiresCluster, diff);
 
         /* Fix up per-pipelinenode pointers */
-        for (i = 0; i < numNodes; ++i)
+        for (i = 0; i < numNodes; i++)
         {
             _PTRINC(pipeline->nodes[i].outputs, RwUInt32, diff);
             _PTRINC(pipeline->nodes[i].slotClusterRefs,
@@ -316,7 +316,7 @@ LockPipelineExpandData(RxPipeline *dstPipe, RxPipeline *srcPipe)
         RWASSERT(FALSE == srcPipe->locked);
 
         /* Then copy the relevant bits of the pipeline nodes across */
-        for (i = srcPipe->numNodes - 1;i >= 0;--i)
+        for (i = srcPipe->numNodes - 1;i >= 0;i--)
         {
             memcpy(&(dstPipe->nodes[i]),
                    &(srcPipe->nodes[i]),
@@ -358,7 +358,7 @@ LockPipelineExpandData(RxPipeline *dstPipe, RxPipeline *srcPipe)
     /* outputs get packed to follow on from the pipeline nodes  */
     /* array at the end of unlock, so if we work from the end   */
     /* backwards we'll avoid overwriting as we go.              */
-    for (i = srcPipe->numNodes - 1;i >= 0;--i)
+    for (i = srcPipe->numNodes - 1;i >= 0;i--)
     {
         /* We copy more than we need to, it matters not.    */
         /* [i.e. the extra entries will never be read from] */
@@ -378,7 +378,7 @@ LockPipelineExpandData(RxPipeline *dstPipe, RxPipeline *srcPipe)
     /* Create topSortData for the existing nodes */
     topSortArray = (RxPipelineNodeTopSortData *)
         &(outputs[RXNODEMAXOUTPUTS*RXPIPELINEGLOBAL(maxNodesPerPipe)]);
-    for (i = 0;(RwUInt32)i < srcPipe->numNodes;++i)
+    for (i = 0;(RwUInt32)i < srcPipe->numNodes;i++)
     {
         topSortArray[i].numIns = 0;
         topSortArray[i].numInsVisited = 0;
@@ -403,7 +403,7 @@ CalcNodesOutputsCompactedMemSize(RxPipeline *pipeline)
     RWFUNCTION(RWSTRING("CalcNodesOutputsCompactedMemSize"));
 
     size = pipeline->numNodes*sizeof(RxPipelineNode);
-    for (i = 0;i < pipeline->numNodes;++i)
+    for (i = 0;i < pipeline->numNodes;i++)
     {
         size += pipeline->nodes[0].numOutputs*sizeof(RwUInt32);
     }
@@ -444,7 +444,7 @@ CalcUnlockPersistentMemSize(RxPipeline *pipeline, RwUInt32 numClusters)
 
     /* Sum up private data size and the lengths */
     /* of the inputToClusterSlot arrays         */
-    for (i = 0;i < pipeline->numNodes;++i)
+    for (i = 0;i < pipeline->numNodes;i++)
     {
         node = &(pipeline->nodes[i]);
         if (node->nodeDef->pipelineNodePrivateDataSize != 0)
@@ -501,7 +501,7 @@ _NodeClone(RxPipelineNode *node, RxClusterDefinition *cluster2add)
     size += (ALIGN(destnumcli * sizeof(RxClusterValidityReq)) +
              ALIGN(source->io.numOutputs * sizeof(RxOutputSpec)));
 
-    for (i = 0; i < source->io.numOutputs; ++i)
+    for (i = 0; i < source->io.numOutputs; i++)
     {
         RxOutputSpec       *outputspec = &source->io.outputs[i];
 
@@ -534,7 +534,7 @@ _NodeClone(RxPipelineNode *node, RxClusterDefinition *cluster2add)
         result->io.clustersOfInterest = (RxClusterRef *) block;
         block += ALIGN(destnumcli * sizeof(RxClusterRef));
 
-        for (i = 0; i < source->io.numClustersOfInterest; ++i)
+        for (i = 0; i < source->io.numClustersOfInterest; i++)
         {
             /* forcepresent */
             result->io.clustersOfInterest[i].forcePresent =
@@ -588,7 +588,7 @@ _NodeClone(RxPipelineNode *node, RxClusterDefinition *cluster2add)
         result->io.outputs = (RxOutputSpec *) block;
         block += ALIGN(source->io.numOutputs * sizeof(RxOutputSpec));
 
-        for (i = 0; i < source->io.numOutputs; ++i)
+        for (i = 0; i < source->io.numOutputs; i++)
         {
             /* name */
             result->io.outputs[i].name = (char *) block;
@@ -668,7 +668,7 @@ IoSpecSearchForCluster(RxIoSpec * iospec,
 
     RWFUNCTION(RWSTRING("IoSpecSearchForCluster"));
 
-    for (n = 0; n < iospec->numClustersOfInterest; ++n)
+    for (n = 0; n < iospec->numClustersOfInterest; n++)
     {
         if (iospec->clustersOfInterest[n].clusterDef == clusterDef)
         {                      /* success */
@@ -743,10 +743,10 @@ _NodeCreate(RxPipeline * pipeline,
         node->outputs = outputs;
         node->numOutputs = n;
 
-        for (n = 0; n < node->numOutputs; ++n)
+        for (n = 0; n < node->numOutputs; n++)
         {
             *outputs = (RwUInt32) - 1;
-            ++outputs;
+            outputs++;
         }
 
         /* Find the first free empty slot in our conservatively-
@@ -769,7 +769,7 @@ _NodeCreate(RxPipeline * pipeline,
 
         /* Only this and _NodeCreate() should ever modify numNodes
          * (okay, so RxPipelineClone() might do as well) */
-        ++pipeline->numNodes;
+        pipeline->numNodes++;
     }
 
     RWRETURN(result);
@@ -788,7 +788,7 @@ PipelineTallyInputs(RxPipeline * pipeline)
     RWFUNCTION(RWSTRING("PipelineTallyInputs"));
 
     nodes = &pipeline->nodes[0];
-    for (i = 0; i < pipeline->numNodes; ++i)
+    for (i = 0; i < pipeline->numNodes; i++)
     {
         if (ISNODELIVE(nodes))
         {
@@ -798,11 +798,11 @@ PipelineTallyInputs(RxPipeline * pipeline)
             /* cleared for below */
             nodes->topSortData->numIns = 0;
         }
-        ++nodes;
+        nodes++;
     }
 
     nodes = &pipeline->nodes[0];
-    for (i = 0; i < pipeline->numNodes; ++i)
+    for (i = 0; i < pipeline->numNodes; i++)
     {
         if (ISNODELIVE(nodes))
         {
@@ -821,7 +821,7 @@ PipelineTallyInputs(RxPipeline * pipeline)
                 while (outputs++, --j);
             }
         }
-        ++nodes;
+        nodes++;
     }
 
     RWRETURNVOID();
@@ -883,10 +883,10 @@ PipelineTopSort(TopSortData *data, RwUInt32 nodeIndex)
         data->pipeline->nodes[i] = data->pipeline->nodes[j];
         data->pipeline->nodes[j] = tmpNode;
         /* Fix up output indices */
-        for (k = 0;k < data->pipeline->numNodes;++k)
+        for (k = 0;k < data->pipeline->numNodes;k++)
         {
             RxPipelineNode *node = &(data->pipeline->nodes[k]);
-            for (l = 0;l < node->numOutputs;++l)
+            for (l = 0;l < node->numOutputs;l++)
             {
                 if (node->outputs[l] == i)
                 {
@@ -902,11 +902,11 @@ PipelineTopSort(TopSortData *data, RwUInt32 nodeIndex)
     }
 
     curNode = &(data->pipeline->nodes[data->nodesArraySlot]);
-    ++data->nodesArraySlot;
+    data->nodesArraySlot++;
 
     if (curNode->numOutputs != 0)
     {
-        for (i = 0;i < curNode->numOutputs;++i)
+        for (i = 0;i < curNode->numOutputs;i++)
         {
             RwUInt32 outIndex = curNode->outputs[i];
 
@@ -917,7 +917,7 @@ PipelineTopSort(TopSortData *data, RwUInt32 nodeIndex)
                 /* If all of this output node's inputs have been processed
                  * (including the current node, right now) then traverse
                  * down, that node can be next in the post-sort array */
-                ++outNode->topSortData->numInsVisited;
+                outNode->topSortData->numInsVisited++;
                 if (outNode->topSortData->numIns ==
                     outNode->topSortData->numInsVisited)
                 {
@@ -980,7 +980,7 @@ PipelineUnlockTopSort(RxPipeline *pipeline)
     }
 
     /* Do all nodes form one connected graph? */
-    for (i = 0; i < pipeline->numNodes; ++i)
+    for (i = 0; i < pipeline->numNodes; i++)
     {
         if ((i != pipeline->entryPoint) &&
             (pipeline->nodes[i].topSortData->numIns == 0))
@@ -1002,7 +1002,7 @@ PipelineUnlockTopSort(RxPipeline *pipeline)
     PipelineTopSort(&data, pipeline->entryPoint);
 
     /* cycle-free graph? */
-    for (i = 0; i < pipeline->numNodes; ++i)
+    for (i = 0; i < pipeline->numNodes; i++)
     {
         /* If a cycle is present, not all the nodes will be visited
          * along all their inputs during the PipelineTopSort */
@@ -1152,7 +1152,7 @@ RxPipelineNodeFindOutputByName(RxPipelineNode * node,
         RxOutputSpec       *out = node->nodeDef->io.outputs;
 
         for (n = 0, out = node->nodeDef->io.outputs;
-             n < numouts; ++n, ++out)
+             n < numouts; n++, out++)
         {
             if (rwstrcmp(out->name, outputname) == 0)
             {
@@ -1346,7 +1346,7 @@ RxPipelineNodeRequestCluster(RxPipeline          *pipeline,
         RwUInt32          i;
 
         /* loop over node's clusters of interest */
-        for (i = 0; i < iospec->numClustersOfInterest; ++i)
+        for (i = 0; i < iospec->numClustersOfInterest; i++)
         {
             if (iospec->clustersOfInterest[i].clusterDef == clusterDef)
             {
@@ -1443,7 +1443,7 @@ RxPipelineNodeReplaceCluster(RxPipeline          *pipeline,
         RwUInt32  i;
 
         /* loop over node's clusters of interest */
-        for (i = 0; i < iospec->numClustersOfInterest; ++i)
+        for (i = 0; i < iospec->numClustersOfInterest; i++)
         {
             if (iospec->clustersOfInterest[i].clusterDef ==
                 oldClusterDef)
@@ -1819,18 +1819,18 @@ RxLockedPipeUnlock(RxPipeline * pipeline)
             topSortData += pipeline->numNodes - 1;
             newTopSortData = (RxPipelineNodeTopSortData *)
                 (((RwUInt8 *)pipeline->superBlock) + unlockStartBlockSize);
-            --newTopSortData;
+            newTopSortData--;
             RWASSERT(newTopSortData > topSortData);
             /* Move the topSortData in reverse order to avoid overwriting */
-            for (i = (pipeline->numNodes - 1);i >= 0;--i)
+            for (i = (pipeline->numNodes - 1);i >= 0;i--)
             {
                 memcpy(newTopSortData,
                        topSortData,
                        sizeof(RxPipelineNodeTopSortData));
                 pipeline->nodes[i].topSortData = newTopSortData;
 
-                --topSortData;
-                --newTopSortData;
+                topSortData--;
+                newTopSortData--;
             }
 
             /* Pack the outputs array after the used pipeline nodes */
@@ -1881,7 +1881,7 @@ RxLockedPipeUnlock(RxPipeline * pipeline)
 
             /* We've effectively 'free' topSortData with the above
              * realloc, so set those pipelinenode pointers to NULL: */
-            for (i = 0;(RwUInt32)i < pipeline->numNodes;++i)
+            for (i = 0;(RwUInt32)i < pipeline->numNodes;i++)
             {
                 pipeline->nodes[i].topSortData = (RxPipelineNodeTopSortData *)NULL;
             }
@@ -1891,7 +1891,7 @@ RxLockedPipeUnlock(RxPipeline * pipeline)
 
             /* init & config method calls flow from bottom to
              * top (i.e. consumer -> producer) */
-            for (i = (pipeline->numNodes - 1);i >= 0;--i)
+            for (i = (pipeline->numNodes - 1);i >= 0;i--)
             {
                 RxNodeDefinition *nodeDef =   pipeline->nodes[i].nodeDef;
                 RxPipelineNode   *node    = &(pipeline->nodes[i]);
@@ -1918,7 +1918,7 @@ RxLockedPipeUnlock(RxPipeline * pipeline)
                     if (nodeDef->nodeMethods.pipelineNodeInit(node) == FALSE)
                     {
                         /* Early-out but unroll nodeInits with nodeTerms */
-                        --nodeDef->InputPipesCnt;
+                        nodeDef->InputPipesCnt--;
                         if (0 == nodeDef->InputPipesCnt)
                         {
                             if (NULL != nodeDef->nodeMethods.nodeTerm)
@@ -1935,7 +1935,7 @@ RxLockedPipeUnlock(RxPipeline * pipeline)
 
             if (FALSE == error)
             {
-                for (i = (pipeline->numNodes - 1);i >= 0;--i)
+                for (i = (pipeline->numNodes - 1);i >= 0;i--)
                 {
                     RxNodeDefinition *nodeDef =   pipeline->nodes[i].nodeDef;
                     RxPipelineNode   *node    = &(pipeline->nodes[i]);
@@ -1960,7 +1960,7 @@ RxLockedPipeUnlock(RxPipeline * pipeline)
                 /* On error, undo completed node initializations in reverse order */
                 for (i = (pipeline->numNodes - 1) - (doneNodes - 1);
                      (RwUInt32)i < pipeline->numNodes;
-                     ++i)
+                     i++)
                 {
                     RxNodeDefinition *nodeDef =   pipeline->nodes[i].nodeDef;
                     RxPipelineNode   *node    = &(pipeline->nodes[i]);
@@ -2108,7 +2108,7 @@ RxPipelineLock(RxPipeline * pipeline)
         {
             RwUInt32            n;
 
-            for (n = 0; n < pipeline->numNodes; ++n)
+            for (n = 0; n < pipeline->numNodes; n++)
             {
                 const RxNodeMethods *const nodeMethods =
                     &pipeline->nodes[n].nodeDef->nodeMethods;
@@ -2298,11 +2298,11 @@ RxPipelineFindNodeByName(RxPipeline * pipeline,
         {
             while ((node != start) && (n > 0))
             {
-                ++node;
-                --n;
+                node++;
+                n--;
             }
-            ++node;
-            --n;
+            node++;
+            n--;
         }
 
         /* loop over pipeline nodes */
@@ -2317,8 +2317,8 @@ RxPipelineFindNodeByName(RxPipeline * pipeline,
                     RWRETURN(node);
                 }
             }
-            ++node;
-            --n;
+            node++;
+            n--;
         }
     }
 
@@ -2448,7 +2448,7 @@ RxLockedPipeAddFragment(RxPipeline       *pipeline,
         for (nodeDef = nodeDef0; nodeDef != NULL;
              nodeDef = va_arg(va, RxNodeDefinition *))
         {
-            ++fragLength;
+            fragLength++;
         }
         va_end(va);
 
@@ -2493,7 +2493,7 @@ RxLockedPipeAddFragment(RxPipeline       *pipeline,
 
                 prevnode = node;
 
-                ++n;
+                n++;
             }
             va_end(va);
 
@@ -3081,7 +3081,7 @@ RxPipelineInsertDebugNode(RxPipeline * pipeline,
         {
             /* Find which output of before outputs to after and
              * cache it in outputNum */
-            for (i = 0; i < before->numOutputs; ++i)
+            for (i = 0; i < before->numOutputs; i++)
             {
                 if (before->outputs[i] == afterNum)
                 {
@@ -3115,14 +3115,14 @@ RxPipelineInsertDebugNode(RxPipeline * pipeline,
 
         if (before)
         {
-            for (i = 0; i < pipeline->packetNumClusterSlots; ++i)
+            for (i = 0; i < pipeline->packetNumClusterSlots; i++)
             {
                 if (before->slotClusterRefs[i])
                 {
                     RxClusterDefinition *newClusterRef =
                         before->slotClusterRefs[i]->clusterRef;
 
-                    for (j = 0; j < numClustersToRequest; ++j)
+                    for (j = 0; j < numClustersToRequest; j++)
                     {
                         if (clusterRefs[j] == newClusterRef)
                             j = numClustersToRequest + 1;
@@ -3130,21 +3130,21 @@ RxPipelineInsertDebugNode(RxPipeline * pipeline,
                     if (j == numClustersToRequest)
                     {
                         clusterRefs[j] = newClusterRef;
-                        ++numClustersToRequest;
+                        numClustersToRequest++;
                     }
                 }
             }
         }
         if (after)
         {
-            for (i = 0; i < pipeline->packetNumClusterSlots; ++i)
+            for (i = 0; i < pipeline->packetNumClusterSlots; i++)
             {
                 if (after->slotClusterRefs[i])
                 {
                     RxClusterDefinition *newClusterRef =
                         after->slotClusterRefs[i]->clusterRef;
 
-                    for (j = 0; j < numClustersToRequest; ++j)
+                    for (j = 0; j < numClustersToRequest; j++)
                     {
                         if (clusterRefs[j] == newClusterRef)
                             j = numClustersToRequest + 1;
@@ -3152,7 +3152,7 @@ RxPipelineInsertDebugNode(RxPipeline * pipeline,
                     if (j == numClustersToRequest)
                     {
                         clusterRefs[j] = newClusterRef;
-                        ++numClustersToRequest;
+                        numClustersToRequest++;
                     }
                 }
             }
@@ -3170,7 +3170,7 @@ RxPipelineInsertDebugNode(RxPipeline * pipeline,
 
             /* Request all the clusters active
              * during, before and after for the debug node */
-            for (i = 0; i < numClustersToRequest; ++i)
+            for (i = 0; i < numClustersToRequest; i++)
             {
                 RxPipelineNodeRequestCluster(pipeline, debugNode,
                                              clusterRefs[i]);

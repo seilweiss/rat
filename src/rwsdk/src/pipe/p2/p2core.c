@@ -393,7 +393,7 @@ PipelineNodeDestroy(RxPipelineNode * node, RxPipeline *pipeline)
                 &(pipeline->nodes[RXPIPELINEGLOBAL(maxNodesPerPipe)]);
             output += RXNODEMAXOUTPUTS*nodeIndex;
             nextOutput = output + RXNODEMAXOUTPUTS;
-            for (i = nodeIndex;i < (pipeline->numNodes - 1);++i)
+            for (i = nodeIndex;i < (pipeline->numNodes - 1);i++)
             {
                 memcpy(output, nextOutput, sizeof(RwUInt32)*RXNODEMAXOUTPUTS);
                 output = nextOutput;
@@ -406,29 +406,29 @@ PipelineNodeDestroy(RxPipelineNode * node, RxPipeline *pipeline)
             topSortData = (RxPipelineNodeTopSortData *)
                 &(output[RXNODEMAXOUTPUTS*RXPIPELINEGLOBAL(maxNodesPerPipe)]);
             nextTopSortData = topSortData + 1;
-            for (i = nodeIndex;i < (pipeline->numNodes - 1);++i)
+            for (i = nodeIndex;i < (pipeline->numNodes - 1);i++)
             {
                 memcpy(topSortData,
                        nextTopSortData,
                        sizeof(RxPipelineNodeTopSortData));
                 topSortData = nextTopSortData;
-                ++nextTopSortData;
+                nextTopSortData++;
             }
 
             /* Pipeline nodes (inc. fixup) */
-            for (i = nodeIndex;i < (pipeline->numNodes - 1);++i)
+            for (i = nodeIndex;i < (pipeline->numNodes - 1);i++)
             {
                 memcpy(&(pipeline->nodes[i]),
                        &(pipeline->nodes[i + 1]),
                        sizeof(RxPipelineNode));
                 pipeline->nodes[i].outputs -= RXNODEMAXOUTPUTS;
-                --pipeline->nodes[i].topSortData;
+                pipeline->nodes[i].topSortData--;
             }
 
             /* Node positions have changed, fix up output indices */
-            for (i = 0;i < (pipeline->numNodes - 1);++i)
+            for (i = 0;i < (pipeline->numNodes - 1);i++)
             {
-                for (j = 0;j < pipeline->nodes[i].numOutputs;++j)
+                for (j = 0;j < pipeline->nodes[i].numOutputs;j++)
                 {
                     if (pipeline->nodes[i].outputs[j] >= (RwUInt32)nodeIndex)
                     {
@@ -440,7 +440,7 @@ PipelineNodeDestroy(RxPipelineNode * node, RxPipeline *pipeline)
                         else
                         {
                             /* This node has moved down one space. */
-                            --pipeline->nodes[i].outputs[j];
+                            pipeline->nodes[i].outputs[j]--;
                         }
                     }
 
@@ -455,7 +455,7 @@ PipelineNodeDestroy(RxPipelineNode * node, RxPipeline *pipeline)
 
     /* Only this and _NodeCreate() should ever modify numNodes
      * (okay, so RxPipelineClone() might do as well) */
-    --pipeline->numNodes;
+    pipeline->numNodes--;
 
     RWRETURN(node);
 }
@@ -638,13 +638,13 @@ MACRO_START                                                                 \
                                                                             \
     for (pk = (node)->inputHead, packetindex = 0;                           \
          pk != NULL;                                                        \
-         pk = pk->prev,  ++packetindex)                                     \
+         pk = pk->prev,  packetindex++)                                     \
     {                                                                       \
         int n;                                                              \
                                                                             \
         RXPACKETLOGFPRINTF((fp, "  %d\n", packetindex));                    \
                                                                             \
-        for (n = 0; n < pk->numClusters; ++n)                               \
+        for (n = 0; n < pk->numClusters; n++)                               \
         {                                                                   \
             if ( NULL != slotClusterRefs[n] )                               \
             {                                                               \
@@ -1447,7 +1447,7 @@ RxClusterLockWrite(RxPacket * packet,
 {
     RwUInt32            slot = packet->inputToClusterSlot[clusterIndex];
 
-    RWAPIFUNCTION(RWSTRING("RxClusterLockWrite"));
+    RWAPIFUNCTION("RxClusterLockWrite");
 
     RWASSERT(RxPipelineInstanced);
 
@@ -1692,7 +1692,7 @@ RxPipelineNodeForAllConnectedOutputs(RxPipelineNode * node,
     {
         RwUInt32            n;
 
-        for (n = 0; n < node->numOutputs; ++n)
+        for (n = 0; n < node->numOutputs; n++)
         {
             RwUInt32            outputindex = node->outputs[n];
 
@@ -1727,7 +1727,7 @@ _rwPipelineCheckForTramplingOfNodePrivateSpace(RxPipeline * pipeline)
     {
         RwUInt32 n;
 
-        for (n = 0;n < pipeline->numNodes;++n)
+        for (n = 0;n < pipeline->numNodes;n++)
         {
             RxPipelineNode *node = &pipeline->nodes[n];
 
@@ -2278,7 +2278,7 @@ RxPipelineCreate(void)
     }
 #endif /* (defined(RWDEBUG)) */
 
-    pipeline = (RxPipeline *)RwFreeListAlloc(RXPIPELINEGLOBAL(pipesFreeList),
+    pipeline = (RxPipeline *)RwFreeListAlloc(RXPIPELINEGLOBAL(pipesFreeList),	
                                      rwID_PIPEMODULE | rwMEMHINTDUR_EVENT);
 
     if (pipeline != NULL)
@@ -2318,7 +2318,7 @@ _rxPipelineDestroy(RxPipeline * Pipeline)
         /* We use numNodes because Pipeline->numNodes
          * is changed by PipelineNodeDestroy()! */
         numNodes = Pipeline->numNodes;
-        for (i = 0; i < numNodes; ++i)
+        for (i = 0; i < numNodes; i++)
         {
             /* Decrements pipeline->numNodes */
             PipelineNodeDestroy(Node, Pipeline);

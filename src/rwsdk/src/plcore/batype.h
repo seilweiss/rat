@@ -296,7 +296,6 @@ enum RwPlatformID
     rwID_SOFTRAS,
     rwID_PCD3D8,
     rwID_PCD3D9,
-    rwID_PSP,
     rwPLATFROMIDFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
 };
 typedef enum RwPlatformID RwPlatformID;

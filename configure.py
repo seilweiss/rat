@@ -224,6 +224,7 @@ cflags_rw_base = [
     "-i src/rwsdk/src/pipe/p2/gcn",
     "-i src/rwsdk/src/plcore",
     "-i src/rwsdk/world",
+    "-i src/rwsdk/world/pipe",
 ]
 cflags_rw_debug = [
     *cflags_rw_base,
@@ -261,6 +262,7 @@ cflags_rat_base = [
     "-i src/rwsdk/src/pipe/p2/gcn",
     "-i src/rwsdk/src/plcore",
     "-i src/rwsdk/world",
+    "-i src/rwsdk/world/pipe",
     "-i src/rt/Engine/Core/gc",
     "-i src/rt/Engine/Core/x",
     "-i src/rt/Engine/Game",
