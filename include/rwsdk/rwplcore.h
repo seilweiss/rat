@@ -22,7 +22,6 @@
 #include "batype.h"
 #include "batypes.h"
 #include "bavector.h"
-#include "rwdbgerr.h"
 #include "rwstring.h"
 #include "rwversion.h"
 #include "drvmodel.h"

@@ -95,6 +95,14 @@ extern const RwChar *_rwMemoryLastAllocFile;
 extern RwUInt32 _rwMemoryLastAllocLine;
 #endif
 
+extern RwFreeList* 
+RwFreeListCreateAndPreallocateSpace(RwInt32 entrySize,
+                                    RwInt32 entriesPerBlock,
+                                    RwInt32 alignment,
+                                    RwInt32 numBlocksToPreallocate,
+                                    RwFreeList *inPlaceSpaceForFreeListStruct,
+                                    RwUInt32 hint);
+
 #ifdef __cplusplus
 }
 #endif

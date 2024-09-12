@@ -181,6 +181,11 @@ cflags_base = [
     "-multibyte",  # For Wii compilers, replace with `-enc SJIS`
     "-i include",
     f"-i build/{config.version}/include",
+    "-i include/PowerPC_EABI_Support/MSL/MSL_C/MSL_Common/Include",
+    #"-i include/PowerPC_EABI_Support/MSL/MSL_C/MSL_Common_Embedded/Include",
+    #"-i include/PowerPC_EABI_Support/MSL/MSL_C/MSL_Common_Embedded/Math/Include",
+    #"-i include/PowerPC_EABI_Support/MSL/MSL_C/PPC_EABI/Include",
+    "-i include/PowerPC_EABI_Support/MSL/MSL_C++/MSL_Common/Include",
 ]
 
 # Debug flags
@@ -208,6 +213,33 @@ cflags_rel = [
     "-O4,p",
 ]
 
+# RenderWare flags
+cflags_rw_base = [
+    *cflags_base,
+    "-i src/rwsdk/driver/gcn",
+    "-i src/rwsdk/os/gcn",
+    "-i src/rwsdk/src",
+    "-i src/rwsdk/src/pipe/p2",
+    "-i src/rwsdk/src/pipe/p2/gcn",
+    "-i src/rwsdk/src/plcore",
+    "-i src/rwsdk/world",
+]
+cflags_rw_debug = [
+    *cflags_rw_base,
+    "-DRWDEBUG",
+]
+cflags_rw_release = [
+    *cflags_rw_base,
+    "-O4",
+]
+cflags_rw_list = [
+    cflags_rw_debug,
+    cflags_rw_release,
+    cflags_rw_release,
+    cflags_rw_release,
+]
+cflags_rw = cflags_rw_list[version_num]
+
 # Game-specific flags
 cflags_rat_base = [
     *cflags_base,
@@ -231,11 +263,6 @@ cflags_rat_base = [
     "-i src/rt/Engine/Core/x",
     "-i src/rt/Engine/Game",
     "-i include/rwsdk",
-    "-i include/PowerPC_EABI_Support/MSL/MSL_C/MSL_Common/Include",
-    #"-i include/PowerPC_EABI_Support/MSL/MSL_C/MSL_Common_Embedded/Include",
-    #"-i include/PowerPC_EABI_Support/MSL/MSL_C/MSL_Common_Embedded/Math/Include",
-    #"-i include/PowerPC_EABI_Support/MSL/MSL_C/PPC_EABI/Include",
-    "-i include/PowerPC_EABI_Support/MSL/MSL_C++/MSL_Common/Include",
     "-i include/dolphin",
     "-i include/bink",
 ]
@@ -295,7 +322,7 @@ def RenderWareLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     return {
         "lib": lib_name,
         "mw_version": "GC/2.5",
-        "cflags": cflags_base,
+        "cflags": cflags_rw,
         "host": False,
         "objects": objects,
     }
@@ -1357,7 +1384,7 @@ config.libs = [
             Object(NonMatching, "rwsdk/src/plcore/bavector.c"),
             Object(NonMatching, "rwsdk/src/plcore/resmem.c"),
             Object(NonMatching, "rwsdk/src/plcore/rwdbgerr.c"),
-            Object(NonMatching, "rwsdk/src/plcore/rwgrp.c"),
+            Object(Matching, "rwsdk/src/plcore/rwgrp.c"),
             Object(NonMatching, "rwsdk/src/plcore/rwstring.c"),
             Object(NonMatching, "rwsdk/os/gcn/osintf.c"),
             Object(NonMatching, "rwsdk/src/babbox.c"),

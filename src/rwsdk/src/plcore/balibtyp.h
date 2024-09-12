@@ -8,6 +8,8 @@
 #include "rwstring.h"
 #include "drvmodel.h"
 
+#define RWPLUGINOFFSET(_type, _base, _offset) ((_type *)((RwUInt8 *)(_base) + (_offset)))
+
 #define RWSRCGLOBAL(variable) (((RwGlobals*)RwEngineInstance)->variable)
 
 enum RwEngineStatus
@@ -46,6 +48,13 @@ struct RwGlobals
     RwMetrics *metrics;
     RwEngineStatus engineStatus;
     RwUInt32 resArenaInitSize;
+};
+
+typedef struct RwModuleInfo RwModuleInfo;
+struct RwModuleInfo
+{
+    RwInt32 globalsOffset;
+    RwInt32 numInstances;
 };
 
 #ifdef __cplusplus

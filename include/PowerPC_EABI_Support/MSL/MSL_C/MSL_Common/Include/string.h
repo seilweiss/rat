@@ -2,6 +2,7 @@
 #define _MSL_STRING_H
 
 #include <size_t.h>
+#include <null.h>
 
 #ifdef __cplusplus
 extern "C" {

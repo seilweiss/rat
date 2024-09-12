@@ -11,6 +11,8 @@
 #define RWFORCEENUMSIZEINT ((RwInt32)((~((RwUInt32)0))>>1))
 #endif
 
+#define __RWUNUSED__
+
 #ifndef MACRO_START
 #define MACRO_START do
 #endif
@@ -28,6 +30,13 @@
 #undef TRUE
 #endif
 #define TRUE !FALSE
+
+#ifdef RWUNICODE
+#define _RWSTRING(x) L ## x
+#else
+#define _RWSTRING(x) x
+#endif
+#define RWSTRING(x) _RWSTRING(x)
 
 typedef struct RwV2d RwV2d;
 struct RwV2d
