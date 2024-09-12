@@ -229,6 +229,7 @@ cflags_rw_base = [
 cflags_rw_debug = [
     *cflags_rw_base,
     "-DRWDEBUG",
+    "-DRW_USE_SPF",
     "-inline off",
 ]
 cflags_rw_release = [
@@ -1379,7 +1380,7 @@ config.libs = [
             Object(Matching, "rwsdk/src/plcore/badebug.c"),
             Object(Matching, "rwsdk/src/plcore/baerr.c"),
             Object(Matching, "rwsdk/src/plcore/baimmedi.c"),
-            Object(NonMatching, "rwsdk/src/plcore/bamatrix.c"),
+            Object(Matching, "rwsdk/src/plcore/bamatrix.c"),
             Object(NonMatching, "rwsdk/src/plcore/bamemory.c"),
             Object(NonMatching, "rwsdk/src/plcore/baresour.c"),
             Object(NonMatching, "rwsdk/src/plcore/bastream.c"),
