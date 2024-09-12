@@ -1421,7 +1421,7 @@ config.libs = [
             Object(Matching, "rwsdk/src/pipe/p2/p2core.c"),
             Object(Matching, "rwsdk/src/pipe/p2/p2define.c"),
             Object(Matching, "rwsdk/src/pipe/p2/p2dep.c"),
-            Object(NonMatching, "rwsdk/src/pipe/p2/p2heap.c"),
+            Object(Matching, "rwsdk/src/pipe/p2/p2heap.c"),
             Object(NonMatching, "rwsdk/src/pipe/p2/p2renderstate.c"),
             Object(NonMatching, "rwsdk/src/pipe/p2/p2resort.c"),
             Object(NonMatching, "rwsdk/src/pipe/p2/gcn/im3dpipe.c"),
