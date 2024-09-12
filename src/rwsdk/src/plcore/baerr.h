@@ -10,6 +10,12 @@ struct RwError
     RwInt32 errorCode;
 };
 
+typedef struct rwErrorGlobals rwErrorGlobals;
+struct rwErrorGlobals
+{
+    RwError     errorCode;                      /* Error code for last error */
+};
+
 #define RWECODE(a,b) a,
 
 enum RwErrorCodeCommon
@@ -27,8 +33,12 @@ extern "C"
 {
 #endif
 
+extern void *_rwErrorOpen(void *object, RwInt32 offset, RwInt32 size);
+extern void *_rwErrorClose(void *object, RwInt32 offset, RwInt32 size);
+
 extern RwError *RwErrorGet(RwError *code);
 extern RwError *RwErrorSet(RwError *code);
+extern RwInt32 _rwerror(RwInt32 code, ...);
 
 #ifdef __cplusplus
 }
