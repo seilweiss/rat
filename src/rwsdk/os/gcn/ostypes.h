@@ -13,6 +13,22 @@ typedef signed char RwInt8;
 typedef char RwChar;
 typedef float RwReal;
 typedef RwInt32 RwBool;
+typedef long long RwInt64;
+typedef unsigned long long RwUInt64;
+
+typedef struct _RwUInt128 RwUInt128;
+typedef struct _RwInt128 RwInt128;
+struct _RwUInt128
+{
+    RwUInt64 top;
+    RwUInt64 bottom;
+};
+
+struct _RwInt128
+{
+    RwInt64 top;
+    RwUInt64 bottom;
+};
 
 #define RwInt32MAXVAL 0x7FFFFFFF
 #define RwInt32MINVAL 0x80000000
@@ -29,5 +45,7 @@ typedef RwInt32 RwBool;
 #define rwMATRIXALIGNMENT sizeof(RwUInt32)
 #define rwFRAMEALIGNMENT sizeof(RwUInt32)
 #define rwV4DALIGNMENT sizeof(RwUInt32)
+
+#define rwMALLOCALIGNMENT 32
 
 #endif
