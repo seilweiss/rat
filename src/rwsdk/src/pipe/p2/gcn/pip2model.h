@@ -21,7 +21,12 @@ struct RxObjSpace3DVertex
     RwReal u;
     RwReal v;
 };
-typedef RxObjSpace3DVertex RwIm3DVertex;
+
+typedef RxObjSpace3DVertex RxObjSpace3DLitVertex;
+
+typedef RxObjSpace3DLitVertex RwIm3DVertex;
+
+typedef RwIm2DVertex RxScrSpace2DVertex;
 
 #define RwIm3DVertexSetPos(_vert, _imx, _imy, _imz)                                               \
 MACRO_START                                                                                       \

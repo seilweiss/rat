@@ -216,6 +216,7 @@ cflags_rel = [
 # RenderWare flags
 cflags_rw_base = [
     *cflags_base,
+    "-sym on",
     "-i src/rwsdk/driver/gcn",
     "-i src/rwsdk/os/gcn",
     "-i src/rwsdk/src",
@@ -227,10 +228,11 @@ cflags_rw_base = [
 cflags_rw_debug = [
     *cflags_rw_base,
     "-DRWDEBUG",
+    "-inline off",
 ]
 cflags_rw_release = [
     *cflags_rw_base,
-    "-O4",
+    "-O4,p",
 ]
 cflags_rw_list = [
     cflags_rw_debug,
@@ -1411,8 +1413,8 @@ config.libs = [
             Object(NonMatching, "rwsdk/driver/gcn/dltexdic.c"),
             Object(NonMatching, "rwsdk/driver/gcn/dltextur.c"),
             Object(NonMatching, "rwsdk/driver/gcn/dltoken.c"),
-            Object(NonMatching, "rwsdk/src/pipe/p2/baim3d.c"),
-            Object(NonMatching, "rwsdk/src/pipe/p2/bapipe.c"),
+            Object(Matching, "rwsdk/src/pipe/p2/baim3d.c"),
+            Object(Matching, "rwsdk/src/pipe/p2/bapipe.c"),
             Object(NonMatching, "rwsdk/src/pipe/p2/p2altmdl.c"),
             Object(NonMatching, "rwsdk/src/pipe/p2/p2core.c"),
             Object(NonMatching, "rwsdk/src/pipe/p2/p2define.c"),

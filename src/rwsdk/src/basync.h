@@ -1,17 +1,49 @@
+/***************************************************************************
+ *                                                                         *
+ * Module  : basync.h                                                      *
+ *                                                                         *
+ * Purpose : Lighting a world                                              *
+ *                                                                         *
+ **************************************************************************/
+
 #ifndef RWSYNC_H
 #define RWSYNC_H
 
+/****************************************************************************
+ Includes
+ */
+
 #include "baframe.h"
 
-#ifdef __cplusplus
+/****************************************************************************
+ Defines
+ */
+
+/****************************************************************************
+ Global Types
+ */
+
+/****************************************************************************
+ Function prototypes
+ */
+
+/* RWPUBLIC */
+
+#ifdef    __cplusplus
 extern "C"
 {
-#endif
-
+#endif                          /* __cplusplus */
+    
+/* Sync all the dirty frames */
 extern RwBool _rwFrameSyncDirty(void);
 
-#ifdef __cplusplus
-}
-#endif
+/* Syncing the LTMs in a hierarchy */
+extern void _rwFrameSyncHierarchyLTM(RwFrame *frame);
 
-#endif
+#ifdef    __cplusplus
+}
+#endif                          /* __cplusplus */
+
+/* RWPUBLICEND */
+
+#endif /* RWSYNC_H */
