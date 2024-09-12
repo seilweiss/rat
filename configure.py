@@ -189,7 +189,7 @@ cflags_base = [
 ]
 
 # Debug flags
-if config.debug:
+if version_num == 0:
     cflags_base.extend(["-sym on", "-DDEBUG=1"])
 else:
     cflags_base.append("-DNDEBUG=1")
@@ -1378,7 +1378,7 @@ config.libs = [
             Object(Matching, "rwsdk/src/plcore/bacolor.c"),
             Object(Matching, "rwsdk/src/plcore/badebug.c"),
             Object(Matching, "rwsdk/src/plcore/baerr.c"),
-            Object(NonMatching, "rwsdk/src/plcore/baimmedi.c"),
+            Object(Matching, "rwsdk/src/plcore/baimmedi.c"),
             Object(NonMatching, "rwsdk/src/plcore/bamatrix.c"),
             Object(NonMatching, "rwsdk/src/plcore/bamemory.c"),
             Object(NonMatching, "rwsdk/src/plcore/baresour.c"),
