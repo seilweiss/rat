@@ -1416,7 +1416,7 @@ config.libs = [
             Object(Matching, "rwsdk/src/pipe/p2/baim3d.c"),
             Object(Matching, "rwsdk/src/pipe/p2/bapipe.c"),
             Object(Matching, "rwsdk/src/pipe/p2/p2altmdl.c"),
-            Object(NonMatching, "rwsdk/src/pipe/p2/p2core.c"),
+            Object(Matching, "rwsdk/src/pipe/p2/p2core.c"),
             Object(NonMatching, "rwsdk/src/pipe/p2/p2define.c"),
             Object(NonMatching, "rwsdk/src/pipe/p2/p2dep.c"),
             Object(NonMatching, "rwsdk/src/pipe/p2/p2heap.c"),

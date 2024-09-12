@@ -5,6 +5,8 @@
 #include "bacolor.h"
 #include "drvmodel.h"
 
+#define RXHEAPPLATFORMDEFAULTSIZE  (1 << 12) /* 4k */
+
 typedef struct RxObjSpace3DVertex RxObjSpace3DVertex;
 struct RxObjSpace3DVertex
 {
