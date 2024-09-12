@@ -1374,7 +1374,7 @@ config.libs = [
     RenderWareLib(
         "rwcore",
         [
-            Object(NonMatching, "rwsdk/src/plcore/babinary.c"),
+            Object(Matching, "rwsdk/src/plcore/babinary.c"),
             Object(NonMatching, "rwsdk/src/plcore/bacolor.c"),
             Object(NonMatching, "rwsdk/src/plcore/badebug.c"),
             Object(Matching, "rwsdk/src/plcore/baerr.c"),
