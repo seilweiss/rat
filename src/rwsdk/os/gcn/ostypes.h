@@ -41,7 +41,7 @@ struct _RwInt128
 #define RwUInt16MAXVAL 0xFFFF
 #define RwUInt16MINVAL 0x0000
 
-#define RWALIGN(type, x) type
+#define RWALIGN(type, x) type __attribute__ ((aligned(x)))
 #define rwMATRIXALIGNMENT sizeof(RwUInt32)
 #define rwFRAMEALIGNMENT sizeof(RwUInt32)
 #define rwV4DALIGNMENT sizeof(RwUInt32)
