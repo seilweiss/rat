@@ -42,12 +42,111 @@ typedef rwGameCube2DVertex RwIm2DVertex;
 typedef RwUInt16 RxVertexIndex;
 typedef RxVertexIndex RwImVertexIndex;
 
+#define RwV3dTransformPointMacro(_pntsOut, _pntsIn, _matrix)                \
+MACRO_START                                                                 \
+{                                                                           \
+    register RwV3d *__pntsOut = (_pntsOut);                                 \
+    register const RwV3d *__pntsIn = (_pntsIn);                             \
+    register const RwMatrix *__matrix = (_matrix);                          \
+    asm {                                                                   \
+        psq_l f8, 0x0(__pntsIn), 0, 0;                                      \
+        psq_l f9, 0x8(__pntsIn), 1, 0;                                      \
+        psq_l f0, 0x0(__matrix), 0, 0;                                      \
+        psq_l f1, 0x8(__matrix), 1, 0;                                      \
+        psq_l f6, 0x30(__matrix), 0, 0;                                     \
+        psq_l f7, 0x38(__matrix), 1, 0;                                     \
+        psq_l f2, 0x10(__matrix), 0, 0;                                     \
+        psq_l f3, 0x18(__matrix), 1, 0;                                     \
+        ps_madds0 f10, f0, f8, f6;                                          \
+        ps_madds0 f11, f1, f8, f7;                                          \
+        psq_l f4, 0x20(__matrix), 0, 0;                                     \
+        psq_l f5, 0x28(__matrix), 1, 0;                                     \
+        ps_madds1 f10, f2, f8, f10;                                         \
+        ps_madds1 f11, f3, f8, f11;                                         \
+        ps_madds0 f10, f4, f9, f10;                                         \
+        ps_madds0 f11, f5, f9, f11;                                         \
+        psq_st f10, 0x0(__pntsOut), 0, 0;                                   \
+        psq_st f11, 0x8(__pntsOut), 1, 0;                                   \
+    }                                                                       \
+}                                                                           \
+MACRO_STOP
+
+#define RwV3dTransformPointsMacro(_pntsOut, _pntsIn, _count, _matrix)       \
+MACRO_START                                                                 \
+{                                                                           \
+    register RwV3d *__pntsOut = (_pntsOut);                                 \
+    register const RwV3d *__pntsIn = (_pntsIn);                             \
+    register RwInt32 __count = (_count);                                    \
+    register const RwMatrix *__matrix = (_matrix);                          \
+    asm {                                                                   \
+        mtctr __count;                                                      \
+        psq_l f0, 0x0(__matrix), 0, 0;                                      \
+        psq_l f1, 0x8(__matrix), 1, 0;                                      \
+        addi __pntsOut, __pntsOut, -4;                                      \
+        psq_l f6, 0x30(__matrix), 0, 0;                                     \
+        psq_l f7, 0x38(__matrix), 1, 0;                                     \
+        psq_l f8, 0x0(__pntsIn), 0, 0;                                      \
+        psq_lu f9, 0x8(__pntsIn), 1, 0;                                     \
+        psq_l f2, 0x10(__matrix), 0, 0;                                     \
+        psq_l f3, 0x18(__matrix), 1, 0;                                     \
+        psq_l f4, 0x20(__matrix), 0, 0;                                     \
+        psq_l f5, 0x28(__matrix), 1, 0;                                     \
+    loop:                                                                   \
+        ps_madds0 f10, f0, f8, f6;                                          \
+        ps_madds0 f11, f1, f8, f7;                                          \
+        ps_madds1 f10, f2, f8, f10;                                         \
+        ps_madds1 f11, f3, f8, f11;                                         \
+        psq_lu f8, 0x4(__pntsIn), 0, 0;                                     \
+        ps_madds0 f10, f4, f9, f10;                                         \
+        ps_madds0 f11, f5, f9, f11;                                         \
+        psq_lu f9, 0x8(__pntsIn), 1, 0;                                     \
+        psq_stu f10, 0x4(__pntsOut), 0, 0;                                  \
+        psq_stu f11, 0x8(__pntsOut), 1, 0;                                  \
+        bdnz loop;                                                          \
+    }                                                                       \
+}                                                                           \
+MACRO_STOP
+
+#define RwV3dTransformVectorMacro(_vecsOut, _vecsIn, _matrix)               \
+MACRO_START                                                                 \
+{                                                                           \
+    register RwV3d *__vecsOut = (_vecsOut);                                 \
+    register const RwV3d *__vecsIn = (_vecsIn);                             \
+    register const RwMatrix *__matrix = (_matrix);                          \
+    asm {                                                                   \
+        psq_l f6, 0x0(__vecsIn), 0, 0;                                      \
+        psq_l f7, 0x8(__vecsIn), 1, 0;                                      \
+        psq_l f0, 0x0(__matrix), 0, 0;                                      \
+        psq_l f1, 0x8(__matrix), 1, 0;                                      \
+        psq_l f2, 0x10(__matrix), 0, 0;                                     \
+        psq_l f3, 0x18(__matrix), 1, 0;                                     \
+        ps_muls0 f10, f0, f6;                                               \
+        ps_muls0 f11, f1, f6;                                               \
+        psq_l f4, 0x20(__matrix), 0, 0;                                     \
+        psq_l f5, 0x28(__matrix), 1, 0;                                     \
+        ps_madds1 f10, f2, f6, f10;                                         \
+        ps_madds1 f11, f3, f6, f11;                                         \
+        ps_madds0 f10, f4, f7, f10;                                         \
+        ps_madds0 f11, f5, f7, f11;                                         \
+        psq_st f10, 0x0(__vecsOut), 0, 0;                                   \
+        psq_st f11, 0x8(__vecsOut), 1, 0;                                   \
+    }                                                                       \
+}                                                                           \
+MACRO_STOP
+
+// UNIMPLEMENTED
+#define RwV3dTransformVectorsMacro(_vecsOut, _vecsIn, _count, _matrix)      \
+MACRO_START                                                                 \
+{                                                                           \
+}                                                                           \
+MACRO_STOP
+
 #define RwMatrixMultiplyMacro(_matrix, _matrixIn1, _matrixIn2)               \
 MACRO_START                                                                  \
 {                                                                            \
-    register RwMatrix* _dst = (_matrix);                                     \
-    register const RwMatrix* _matA = (_matrixIn1);                           \
-    register const RwMatrix* _matB = (_matrixIn2);                           \
+    register RwMatrix *_dst = (_matrix);                                     \
+    register const RwMatrix *_matA = (_matrixIn1);                           \
+    register const RwMatrix *_matB = (_matrixIn2);                           \
     asm {                                                                    \
         psq_l f8, 0x0(_matB), 0, 0;                                          \
         psq_l f0, 0x0(_matA), 0, 0;                                          \

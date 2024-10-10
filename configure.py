@@ -217,6 +217,8 @@ cflags_rel = [
 cflags_rw_base = [
     *cflags_base,
     "-sym on",
+    "-DRW_USE_SPF",
+    "-DRWNOVECMULTFUNCS",
     "-i include/rwsdk",
     "-i include/dolphin",
     "-i src/rwsdk/driver/gcn",
@@ -233,7 +235,6 @@ cflags_rw_base = [
 cflags_rw_debug = [
     *cflags_rw_base,
     "-DRWDEBUG",
-    "-DRW_USE_SPF",
     "-inline off",
 ]
 cflags_rw_release = [
@@ -1392,7 +1393,7 @@ config.libs = [
             Object(Matching, "rwsdk/src/plcore/bastream.c"),
             Object(Matching, "rwsdk/src/plcore/batkbin.c"),
             Object(Matching, "rwsdk/src/plcore/batkreg.c"),
-            Object(NonMatching, "rwsdk/src/plcore/bavector.c"),
+            Object(Matching, "rwsdk/src/plcore/bavector.c"),
             Object(NonMatching, "rwsdk/src/plcore/resmem.c"),
             Object(Matching, "rwsdk/src/plcore/rwdbgerr.c"),
             Object(Matching, "rwsdk/src/plcore/rwgrp.c"),
