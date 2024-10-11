@@ -219,8 +219,8 @@ cflags_rw_base = [
     "-sym on",
     "-DRW_USE_SPF",
     "-DRWNOVECMULTFUNCS",
-    "-i include/rwsdk",
     "-i include/dolphin",
+    "-i src/rwsdk/include/gcn",
     "-i src/rwsdk/driver/common",
     "-i src/rwsdk/driver/gcn",
     "-i src/rwsdk/os/gcn",
@@ -267,7 +267,7 @@ cflags_rat_base = [
     "-i src/rt/Engine/Core/gc",
     "-i src/rt/Engine/Core/x",
     "-i src/rt/Engine/Game",
-    "-i include/rwsdk",
+    "-i src/rwsdk/include/gcn",
     "-i include/dolphin",
     "-i include/bink",
 ]
