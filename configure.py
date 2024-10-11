@@ -1410,7 +1410,7 @@ config.libs = [
             Object(Matching, "rwsdk/src/baimras.c"),
             Object(Matching, "rwsdk/src/baraster.c"),
             Object(Matching, "rwsdk/src/baresamp.c"),
-            Object(NonMatching, "rwsdk/src/basync.c"),
+            Object(Matching, "rwsdk/src/basync.c"),
             Object(NonMatching, "rwsdk/src/batextur.c"),
             Object(NonMatching, "rwsdk/src/batypehf.c"),
             Object(NonMatching, "rwsdk/driver/common/palquant.c"),
