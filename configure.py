@@ -1330,7 +1330,7 @@ config.libs = [
             Object(Matching, "rwsdk/world/balight.c"),
             Object(Matching, "rwsdk/world/bamateri.c"),
             Object(Matching, "rwsdk/world/bamatlst.c"),
-            Object(NonMatching, "rwsdk/world/bamesh.c"),
+            Object(Matching, "rwsdk/world/bamesh.c"),
             Object(NonMatching, "rwsdk/world/bameshop.c"),
             Object(NonMatching, "rwsdk/world/basector.c"),
             Object(NonMatching, "rwsdk/world/baworld.c"),
