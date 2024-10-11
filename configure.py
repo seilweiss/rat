@@ -1409,7 +1409,7 @@ config.libs = [
             Object(Matching, "rwsdk/src/baimage.c"),
             Object(Matching, "rwsdk/src/baimras.c"),
             Object(Matching, "rwsdk/src/baraster.c"),
-            Object(NonMatching, "rwsdk/src/baresamp.c"),
+            Object(Matching, "rwsdk/src/baresamp.c"),
             Object(NonMatching, "rwsdk/src/basync.c"),
             Object(NonMatching, "rwsdk/src/batextur.c"),
             Object(NonMatching, "rwsdk/src/batypehf.c"),
