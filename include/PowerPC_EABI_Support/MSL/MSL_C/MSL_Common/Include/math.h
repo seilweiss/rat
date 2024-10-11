@@ -9,6 +9,7 @@ int __float_nan[];
 
 #define NAN       (*(float*)      __float_nan)
 
+extern double pow(double, double);
 extern double cos(double);
 extern double sin(double);
 extern double sqrt(double);
@@ -16,12 +17,14 @@ extern double sqrt(double);
 extern float cosf(float);
 extern float sinf(float);
 extern float fabsf(float);
+extern float powf(float, float);
 extern float sqrtf(float);
 
 inline float cosf(float x) { return (float)cos((double)x); }
 inline float sinf(float x) { return (float)sin((double)x); }
+inline float powf(float x, float y) { return (float)pow((double)x, (double)y); }
 
-extern inline float sqrtf(float x)
+inline float sqrtf(float x)
 {
 	static const double _half=.5f;
 	static const double _three=3.0f;
