@@ -1,3 +1,4 @@
+/* RWPUBLIC */
 #ifndef GCN_OSTYPES_H
 #define GCN_OSTYPES_H
 
@@ -49,3 +50,4 @@ struct _RwInt128
 #define rwMALLOCALIGNMENT 32
 
 #endif
+/* RWPUBLICEND */

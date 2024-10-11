@@ -5,6 +5,8 @@
 #include "bacolor.h"
 #include "drvmodel.h"
 
+/* RWPUBLIC */
+
 #define RXHEAPPLATFORMDEFAULTSIZE  (1 << 12) /* 4k */
 
 typedef struct RxObjSpace3DVertex RxObjSpace3DVertex;
@@ -66,4 +68,5 @@ MACRO_START                                                                     
 }                                                                                                 \
 MACRO_STOP
 
-#endif
+/* RWPUBLICEND */
+#endif /* PIP2MODEL_H */

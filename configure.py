@@ -268,17 +268,6 @@ cflags_rat_base = [
     "-i include/rwsdk",
     "-i include/dolphin",
     "-i include/bink",
-    "-i src/rwsdk/driver/common",
-    "-i src/rwsdk/driver/gcn",
-    "-i src/rwsdk/os/gcn",
-    "-i src/rwsdk/src",
-    "-i src/rwsdk/src/pipe/p2",
-    "-i src/rwsdk/src/pipe/p2/gcn",
-    "-i src/rwsdk/src/plcore",
-    "-i src/rwsdk/tool/fsyst",
-    "-i src/rwsdk/tool/fsyst/gcn",
-    "-i src/rwsdk/world",
-    "-i src/rwsdk/world/pipe",
 ]
 cflags_rat_d = [
     *cflags_rat_base,

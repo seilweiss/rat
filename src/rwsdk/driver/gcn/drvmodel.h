@@ -1,8 +1,11 @@
+/* RWPUBLIC */
 #ifndef GCN_DRVMODEL_H
 #define GCN_DRVMODEL_H
+/* RWPUBLICEND */
 
 #include "batypes.h"
 
+/* RWPUBLIC */
 #define RwIm2DVertexSetScreenX(vert, scrnx) ((vert)->x = (scrnx))
 #define RwIm2DVertexSetScreenY(vert, scrny) ((vert)->y = (scrny))
 #define RwIm2DVertexSetScreenZ(vert, scrnz) ((vert)->z = (scrnz))
@@ -204,4 +207,5 @@ MACRO_START                                                                  \
 }                                                                            \
 MACRO_STOP
 
-#endif
+#endif /* GCN_DRVMODEL_H */
+/* RWPUBLICEND */
