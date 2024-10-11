@@ -1401,7 +1401,7 @@ config.libs = [
             Object(Matching, "rwsdk/os/gcn/osintf.c"),
             Object(Matching, "rwsdk/src/babbox.c"),
             Object(Matching, "rwsdk/src/babincam.c"),
-            Object(NonMatching, "rwsdk/src/babinfrm.c"),
+            Object(Matching, "rwsdk/src/babinfrm.c"),
             Object(NonMatching, "rwsdk/src/babintex.c"),
             Object(NonMatching, "rwsdk/src/bacamera.c"),
             Object(NonMatching, "rwsdk/src/badevice.c"),
