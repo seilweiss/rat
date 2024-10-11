@@ -1407,7 +1407,7 @@ config.libs = [
             Object(Matching, "rwsdk/src/badevice.c"),
             Object(Matching, "rwsdk/src/baframe.c"),
             Object(Matching, "rwsdk/src/baimage.c"),
-            Object(NonMatching, "rwsdk/src/baimras.c"),
+            Object(Matching, "rwsdk/src/baimras.c"),
             Object(NonMatching, "rwsdk/src/baraster.c"),
             Object(NonMatching, "rwsdk/src/baresamp.c"),
             Object(NonMatching, "rwsdk/src/basync.c"),
