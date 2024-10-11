@@ -228,7 +228,6 @@ extern RwInt32 RpMaterialRegisterPluginStream(RwUInt32 pluginID,
                                               RwPluginDataChunkReadCallBack readCB,
                                               RwPluginDataChunkWriteCallBack writeCB,
                                               RwPluginDataChunkGetSizeCallBack getSizeCB);
-extern RwPluginRegistry *RpMaterialGetRegistry(void);
 extern RwInt32 RpMaterialSetStreamAlwaysCallBack(
                         RwUInt32 pluginID,
                         RwPluginDataChunkAlwaysCallBack alwaysCB);
