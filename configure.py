@@ -1398,7 +1398,7 @@ config.libs = [
             Object(Matching, "rwsdk/src/plcore/rwdbgerr.c"),
             Object(Matching, "rwsdk/src/plcore/rwgrp.c"),
             Object(Matching, "rwsdk/src/plcore/rwstring.c"),
-            Object(NonMatching, "rwsdk/os/gcn/osintf.c"),
+            Object(Matching, "rwsdk/os/gcn/osintf.c"),
             Object(NonMatching, "rwsdk/src/babbox.c"),
             Object(NonMatching, "rwsdk/src/babincam.c"),
             Object(NonMatching, "rwsdk/src/babinfrm.c"),
