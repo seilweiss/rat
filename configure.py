@@ -1411,7 +1411,7 @@ config.libs = [
             Object(Matching, "rwsdk/src/baraster.c"),
             Object(Matching, "rwsdk/src/baresamp.c"),
             Object(Matching, "rwsdk/src/basync.c"),
-            Object(NonMatching, "rwsdk/src/batextur.c"),
+            Object(Matching, "rwsdk/src/batextur.c"),
             Object(NonMatching, "rwsdk/src/batypehf.c"),
             Object(NonMatching, "rwsdk/driver/common/palquant.c"),
             Object(NonMatching, "rwsdk/driver/gcn/dl2drend.c"),
