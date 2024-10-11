@@ -214,7 +214,7 @@ cflags_rel = [
 ]
 
 # RenderWare flags
-cflags_rw_base = [
+cflags_rwcore_base = [
     *cflags_base,
     "-sym on",
     "-DRW_USE_SPF",
@@ -230,27 +230,90 @@ cflags_rw_base = [
     "-i src/rwsdk/src/plcore",
     "-i src/rwsdk/tool/fsyst",
     "-i src/rwsdk/tool/fsyst/gcn",
+]
+cflags_rwcore_debug = [
+    *cflags_rwcore_base,
+    "-DRWDEBUG",
+    "-inline off",
+]
+cflags_rwcore_release = [
+    *cflags_rwcore_base,
+    "-O4,p",
+]
+cflags_rwcore_list = [
+    cflags_rwcore_debug,
+    cflags_rwcore_release,
+    cflags_rwcore_release,
+    cflags_rwcore_release,
+]
+cflags_rwcore = cflags_rwcore_list[version_num]
+
+cflags_rpcollis = [
+    *cflags_rwcore,
+    "-i src/rwsdk/plugin/collis",
+]
+cflags_rphanim = [
+    *cflags_rwcore,
+    "-i src/rwsdk/plugin/hanim",
+]
+cflags_rpmatfx = [
+    *cflags_rwcore,
+    "-i src/rwsdk/plugin/matfx",
+    "-i src/rwsdk/plugin/matfx/gcn",
+]
+cflags_rpptank = [
+    *cflags_rwcore,
+    "-i src/rwsdk/plugin/ptank",
+    "-i src/rwsdk/plugin/ptank/gcn",
+]
+cflags_rpskinmatfx = [
+    *cflags_rwcore,
+    "-i src/rwsdk/plugin/skin2",
+    "-i src/rwsdk/plugin/skin2/gcn",
+]
+cflags_rpusrdat = [
+    *cflags_rwcore,
+    "-i src/rwsdk/plugin/userdata",
+]
+cflags_rpworld = [
+    *cflags_rwcore,
     "-i src/rwsdk/world",
     "-i src/rwsdk/world/pipe",
     "-i src/rwsdk/world/pipe/p2",
     "-i src/rwsdk/world/pipe/p2/gcn",
 ]
-cflags_rw_debug = [
-    *cflags_rw_base,
-    "-DRWDEBUG",
-    "-inline off",
+cflags_rtanim = [
+    *cflags_rwcore,
+    "-i src/rwsdk/tool/anim",
 ]
-cflags_rw_release = [
-    *cflags_rw_base,
-    "-O4,p",
+cflags_rtcharse = [
+    *cflags_rwcore,
+    "-i src/rwsdk/tool/charse",
 ]
-cflags_rw_list = [
-    cflags_rw_debug,
-    cflags_rw_release,
-    cflags_rw_release,
-    cflags_rw_release,
+cflags_rtfsyst = [
+    *cflags_rwcore,
+    "-i src/rwsdk/tool/fsyst",
 ]
-cflags_rw = cflags_rw_list[version_num]
+cflags_rtintsec = [
+    *cflags_rwcore,
+    "-i src/rwsdk/tool/intsec",
+]
+cflags_rtquat = [
+    *cflags_rwcore,
+    "-i src/rwsdk/tool/quat",
+]
+cflags_rtskinsp = [
+    *cflags_rwcore,
+    "-i src/rwsdk/tool/sknsplit",
+]
+cflags_rtslerp = [
+    *cflags_rwcore,
+    "-i src/rwsdk/tool/slerp",
+]
+cflags_rttilerd = [
+    *cflags_rwcore,
+    "-i src/rwsdk/tool/tilerd",
+]
 
 # Game-specific flags
 cflags_rat_base = [
@@ -323,11 +386,11 @@ def DolphinLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     }
 
 # Helper function for RenderWare libraries
-def RenderWareLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
+def RenderWareLib(lib_name: str, cflags: List[str], objects: List[Object]) -> Dict[str, Any]:
     return {
         "lib": lib_name,
         "mw_version": "GC/2.5",
-        "cflags": cflags_rw,
+        "cflags": cflags,
         "host": False,
         "objects": objects,
     }
@@ -1251,16 +1314,18 @@ config.libs = [
     },
     RenderWareLib(
         "rpcollis",
+        cflags_rpcollis,
         [
             Object(NonMatching, "rwsdk/plugin/collis/ctdata.c"),
             Object(NonMatching, "rwsdk/plugin/collis/ctquery.c"),
             Object(NonMatching, "rwsdk/plugin/collis/colldata.c"),
             Object(NonMatching, "rwsdk/plugin/collis/collquery.c"),
-            Object(NonMatching, "rwsdk/include/gcn/rpdbgerr_1.c"),
+            Object(Matching, "rwsdk/include/gcn/rpdbgerr_1.c"),
         ],
     ),
     RenderWareLib(
         "rphanim",
+        cflags_rphanim,
         [
             Object(NonMatching, "rwsdk/plugin/hanim/stdkey.c"),
             Object(NonMatching, "rwsdk/plugin/hanim/rphanim.c"),
@@ -1268,6 +1333,7 @@ config.libs = [
     ),
     RenderWareLib(
         "rpmatfx",
+        cflags_rpmatfx,
         [
             Object(NonMatching, "rwsdk/plugin/matfx/rpmatfx.c"),
             Object(NonMatching, "rwsdk/plugin/matfx/gcn/effectPipesGcn.c"),
@@ -1277,11 +1343,12 @@ config.libs = [
             Object(NonMatching, "rwsdk/plugin/matfx/gcn/nbtGen.c"),
             Object(NonMatching, "rwsdk/plugin/matfx/multiTex.c"),
             Object(NonMatching, "rwsdk/plugin/matfx/multiTexEffect.c"),
-            Object(NonMatching, "rwsdk/include/gcn/rpdbgerr_2.c"),
+            Object(Matching, "rwsdk/include/gcn/rpdbgerr_2.c"),
         ],
     ),
     RenderWareLib(
         "rpptank",
+        cflags_rpptank,
         [
             Object(NonMatching, "rwsdk/plugin/ptank/rpptank.c"),
             Object(NonMatching, "rwsdk/plugin/ptank/gcn/ptankgcn.c"),
@@ -1302,6 +1369,7 @@ config.libs = [
     ),
     RenderWareLib(
         "rpskinmatfx",
+        cflags_rpskinmatfx,
         [
             Object(NonMatching, "rwsdk/plugin/skin2/bsplit.c"),
             Object(NonMatching, "rwsdk/plugin/skin2/rpskin.c"),
@@ -1312,17 +1380,19 @@ config.libs = [
             Object(NonMatching, "rwsdk/plugin/skin2/gcn/skingcnasm.c"),
             Object(NonMatching, "rwsdk/plugin/skin2/gcn/skinmatfxgcn.c"),
             Object(NonMatching, "rwsdk/plugin/skin2/gcn/skingcnm.c"),
-            Object(NonMatching, "rwsdk/include/gcn/rpdbgerr_3.c"),
+            Object(Matching, "rwsdk/include/gcn/rpdbgerr_3.c"),
         ],
     ),
     RenderWareLib(
         "rpusrdat",
+        cflags_rpusrdat,
         [
             Object(NonMatching, "rwsdk/plugin/userdata/rpusrdat.c"),
         ],
     ),
     RenderWareLib(
         "rpworld",
+        cflags_rpworld,
         [
             Object(Matching, "rwsdk/world/babinwor.c"),
             Object(Matching, "rwsdk/world/baclump.c"),
@@ -1354,26 +1424,29 @@ config.libs = [
             Object(NonMatching, "rwsdk/world/pipe/p2/gcn/instance/vbuffer.c"),
             Object(NonMatching, "rwsdk/world/pipe/p2/gcn/instance/vtools.c"),
             Object(NonMatching, "rwsdk/world/pipe/p2/gcn/instance/vtxdesc.c"),
-            Object(NonMatching, "rwsdk/include/gcn/rpdbgerr_4.c"),
+            Object(Matching, "rwsdk/include/gcn/rpdbgerr_4.c"),
         ],
     ),
     RenderWareLib(
         "rtanim",
+        cflags_rtanim,
         [
             Object(NonMatching, "rwsdk/tool/anim/rtanim.c"),
-            Object(NonMatching, "rwsdk/include/gcn/rpdbgerr_5.c"),
+            Object(Matching, "rwsdk/include/gcn/rpdbgerr_5.c"),
         ],
     ),
     RenderWareLib(
         "rtcharse",
+        cflags_rtcharse,
         [
             Object(NonMatching, "rwsdk/tool/charse/chrprint.c"),
             Object(NonMatching, "rwsdk/tool/charse/rtcharse.c"),
-            Object(NonMatching, "rwsdk/include/gcn/rpdbgerr_6.c"),
+            Object(Matching, "rwsdk/include/gcn/rpdbgerr_6.c"),
         ],
     ),
     RenderWareLib(
         "rwcore",
+        cflags_rwcore,
         [
             Object(Matching, "rwsdk/src/plcore/babinary.c"),
             Object(Matching, "rwsdk/src/plcore/bacolor.c"),
@@ -1431,24 +1504,28 @@ config.libs = [
     ),
     RenderWareLib(
         "rtfsyst",
+        cflags_rtfsyst,
         [
             Object(NonMatching, "rwsdk/tool/fsyst/rtfsmgr.c"),
         ],
     ),
     RenderWareLib(
         "rtintsec",
+        cflags_rtintsec,
         [
             Object(NonMatching, "rwsdk/tool/intsec/rtintsec.c"),
         ],
     ),
     RenderWareLib(
         "rtquat",
+        cflags_rtquat,
         [
             Object(NonMatching, "rwsdk/tool/quat/rtquat.c"),
         ],
     ),
     RenderWareLib(
         "rtskinsp",
+        cflags_rtskinsp,
         [
             Object(NonMatching, "rwsdk/tool/sknsplit/skinsplit.c"),
             Object(NonMatching, "rwsdk/tool/sknsplit/rtskinsp.c"),
@@ -1456,12 +1533,14 @@ config.libs = [
     ),
     RenderWareLib(
         "rtslerp",
+        cflags_rtslerp,
         [
             Object(NonMatching, "rwsdk/tool/slerp/rtslerp.c"),
         ],
     ),
     RenderWareLib(
         "rttilerd",
+        cflags_rttilerd,
         [
             Object(NonMatching, "rwsdk/tool/tilerd/rttilerd.c"),
         ],
