@@ -232,6 +232,8 @@ cflags_rw_base = [
     "-i src/rwsdk/tool/fsyst/gcn",
     "-i src/rwsdk/world",
     "-i src/rwsdk/world/pipe",
+    "-i src/rwsdk/world/pipe/p2",
+    "-i src/rwsdk/world/pipe/p2/gcn",
 ]
 cflags_rw_debug = [
     *cflags_rw_base,
@@ -1323,7 +1325,7 @@ config.libs = [
         "rpworld",
         [
             Object(Matching, "rwsdk/world/babinwor.c"),
-            Object(NonMatching, "rwsdk/world/baclump.c"),
+            Object(Matching, "rwsdk/world/baclump.c"),
             Object(NonMatching, "rwsdk/world/bageomet.c"),
             Object(NonMatching, "rwsdk/world/balight.c"),
             Object(NonMatching, "rwsdk/world/bamateri.c"),
