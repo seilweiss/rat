@@ -1334,7 +1334,7 @@ config.libs = [
             Object(Matching, "rwsdk/world/bameshop.c"),
             Object(Matching, "rwsdk/world/basector.c"),
             Object(Matching, "rwsdk/world/baworld.c"),
-            Object(NonMatching, "rwsdk/world/baworobj.c"),
+            Object(Matching, "rwsdk/world/baworobj.c"),
             Object(NonMatching, "rwsdk/world/pipe/p2/bapipew.c"),
             Object(NonMatching, "rwsdk/world/pipe/p2/gcn/gcpipe.c"),
             Object(NonMatching, "rwsdk/world/pipe/p2/gcn/vtxfmt.c"),
