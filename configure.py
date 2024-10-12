@@ -1342,7 +1342,7 @@ config.libs = [
             Object(NonMatching, "rwsdk/plugin/matfx/gcn/multiTexGcn.c"),
             Object(NonMatching, "rwsdk/plugin/matfx/gcn/nbtGen.c"),
             Object(Matching, "rwsdk/plugin/matfx/multiTex.c"),
-            Object(NonMatching, "rwsdk/plugin/matfx/multiTexEffect.c"),
+            Object(Matching, "rwsdk/plugin/matfx/multiTexEffect.c"),
             Object(Matching, "rwsdk/include/gcn/rpdbgerr_2.c"),
         ],
     ),
