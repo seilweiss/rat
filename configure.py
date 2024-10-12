@@ -265,6 +265,7 @@ cflags_rpptank = [
     *cflags_rwcore,
     "-i src/rwsdk/plugin/ptank",
     "-i src/rwsdk/plugin/ptank/gcn",
+    "-i src/rwsdk/plugin/ptank/generic",
 ]
 cflags_rpskinmatfx = [
     *cflags_rwcore,
@@ -1350,7 +1351,7 @@ config.libs = [
         "rpptank",
         cflags_rpptank,
         [
-            Object(NonMatching, "rwsdk/plugin/ptank/rpptank.c"),
+            Object(Matching, "rwsdk/plugin/ptank/rpptank.c"),
             Object(NonMatching, "rwsdk/plugin/ptank/gcn/ptankgcn.c"),
             Object(NonMatching, "rwsdk/plugin/ptank/gcn/ptankgcncallbacks.c"),
             Object(NonMatching, "rwsdk/plugin/ptank/gcn/ptankgcnrender.c"),
