@@ -1442,8 +1442,8 @@ config.libs = [
         "rtcharse",
         cflags_rtcharse,
         [
-            Object(NonMatching, "rwsdk/tool/charse/chrprint.c"),
-            Object(NonMatching, "rwsdk/tool/charse/rtcharse.c"),
+            Object(Matching, "rwsdk/tool/charse/chrprint.c"),
+            Object(Matching, "rwsdk/tool/charse/rtcharse.c"),
             Object(Matching, "rwsdk/include/gcn/rpdbgerr_6.c"),
         ],
     ),
