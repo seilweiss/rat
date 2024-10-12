@@ -40,6 +40,24 @@ struct SkinGlobalPlatform
 /*===========================================================================*
  *--- Private Defines -------------------------------------------------------*
  *===========================================================================*/
+#define rpSKINMAXNUMBEROFMATRICES 256
+
+#define _rpSkinPipeline(pipeline)                                       \
+    (_rpSkinGlobals.platform.pipelines[pipeline - 1])
+
+#if (defined(__VECTORC__) && !(defined(RWDEBUG) || defined(RWSUPPRESSINLINE)))
+#define  ATOMICGETDEFAULTINSTANCEPIPELINE()                              \
+    (((rwPipeGlobals *)                                                  \
+     (((RwUInt8 *)(RwEngineInstance)) +                                  \
+      (_rxPipelineGlobalsOffset)))->currentAtomicPipeline)
+#endif /* (defined(__VECTORC__) .... */
+
+#if (!defined(ATOMICGETDEFAULTINSTANCEPIPELINE))
+#define  ATOMICGETDEFAULTINSTANCEPIPELINE()           \
+    (RpAtomicGetDefaultPipeline())
+#endif /* (!defined(ATOMICGETDEFAULTINSTANCEPIPELINE)) */
+
+#define SKIN_ATOMIC_PLATFORM_STREAM_SIZE
 
 /*===========================================================================*
  *--- Private Types ---------------------------------------------------------*
