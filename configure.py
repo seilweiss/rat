@@ -1434,7 +1434,7 @@ config.libs = [
         "rtanim",
         cflags_rtanim,
         [
-            Object(NonMatching, "rwsdk/tool/anim/rtanim.c"),
+            Object(Matching, "rwsdk/tool/anim/rtanim.c"),
             Object(Matching, "rwsdk/include/gcn/rpdbgerr_5.c"),
         ],
     ),
