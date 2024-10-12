@@ -1335,7 +1335,7 @@ config.libs = [
         "rpmatfx",
         cflags_rpmatfx,
         [
-            Object(NonMatching, "rwsdk/plugin/matfx/rpmatfx.c"),
+            Object(Matching, "rwsdk/plugin/matfx/rpmatfx.c"),
             Object(NonMatching, "rwsdk/plugin/matfx/gcn/effectPipesGcn.c"),
             Object(NonMatching, "rwsdk/plugin/matfx/gcn/multiTexGcnData.c"),
             Object(NonMatching, "rwsdk/plugin/matfx/gcn/multiTexGcnPipe.c"),
