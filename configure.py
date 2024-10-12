@@ -1372,7 +1372,7 @@ config.libs = [
         "rpskinmatfx",
         cflags_rpskinmatfx,
         [
-            Object(NonMatching, "rwsdk/plugin/skin2/bsplit.c"),
+            Object(Matching, "rwsdk/plugin/skin2/bsplit.c"),
             Object(NonMatching, "rwsdk/plugin/skin2/rpskin.c"),
             Object(NonMatching, "rwsdk/plugin/skin2/gcn/skingcn.c"),
             Object(NonMatching, "rwsdk/plugin/skin2/gcn/skinstream.c"),
