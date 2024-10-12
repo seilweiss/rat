@@ -8480,7 +8480,7 @@ rwsdk/plugin/skin2/gcn/skinmatfxgcn.c:
 rwsdk/plugin/skin2/gcn/skingcnm.c:
 	.text       start:0x80359ED0 end:0x8035A0B8
 
-rwsdk/plugin/userdata/rpusrdat.c:
+rwsdk/plugin/userdata/release/rpusrdat.c:
 	.text       start:0x8035A0B8 end:0x8035B308
 	.sbss       start:0x80C09DE8 end:0x80C09E28
 

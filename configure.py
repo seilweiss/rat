@@ -1388,7 +1388,9 @@ config.libs = [
         "rpusrdat",
         cflags_rpusrdat,
         [
-            Object(NonMatching, "rwsdk/plugin/userdata/rpusrdat.c"),
+            # Release seems to have an older version of rpusrdat for some reason.
+            Object(Matching, "rwsdk/plugin/userdata/debug/rpusrdat.c") if version_num == 0 else
+            Object(Matching, "rwsdk/plugin/userdata/release/rpusrdat.c"),
         ],
     ),
     RenderWareLib(
