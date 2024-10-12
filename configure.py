@@ -1327,8 +1327,8 @@ config.libs = [
         "rphanim",
         cflags_rphanim,
         [
-            Object(NonMatching, "rwsdk/plugin/hanim/stdkey.c"),
-            Object(NonMatching, "rwsdk/plugin/hanim/rphanim.c"),
+            Object(Matching, "rwsdk/plugin/hanim/stdkey.c"),
+            Object(Matching, "rwsdk/plugin/hanim/rphanim.c"),
         ],
     ),
     RenderWareLib(
