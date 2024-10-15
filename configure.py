@@ -1519,7 +1519,7 @@ config.libs = [
         "rtintsec",
         cflags_rtintsec,
         [
-            Object(NonMatching, "rwsdk/tool/intsec/rtintsec.c"),
+            Object(Matching, "rwsdk/tool/intsec/rtintsec.c"),
         ],
     ),
     RenderWareLib(
