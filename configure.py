@@ -217,8 +217,10 @@ cflags_rel = [
 cflags_rwcore_base = [
     *cflags_base,
     "-sym on",
+    "-DDOLPHIN",
     "-DRW_USE_SPF",
     "-DRWNOVECMULTFUNCS",
+    "-gccinc",
     "-i include/dolphin",
     "-i src/rwsdk/include/gcn",
     "-i src/rwsdk/driver/common",
@@ -228,8 +230,6 @@ cflags_rwcore_base = [
     "-i src/rwsdk/src/pipe/p2",
     "-i src/rwsdk/src/pipe/p2/gcn",
     "-i src/rwsdk/src/plcore",
-    "-i src/rwsdk/tool/fsyst",
-    "-i src/rwsdk/tool/fsyst/gcn",
 ]
 cflags_rwcore_debug = [
     *cflags_rwcore_base,
@@ -249,71 +249,72 @@ cflags_rwcore_list = [
 cflags_rwcore = cflags_rwcore_list[version_num]
 
 cflags_rpcollis = [
-    *cflags_rwcore,
     "-i src/rwsdk/plugin/collis",
+    *cflags_rwcore,
 ]
 cflags_rphanim = [
-    *cflags_rwcore,
     "-i src/rwsdk/plugin/hanim",
+    *cflags_rwcore,
 ]
 cflags_rpmatfx = [
-    *cflags_rwcore,
     "-i src/rwsdk/plugin/matfx",
     "-i src/rwsdk/plugin/matfx/gcn",
+    *cflags_rwcore,
 ]
 cflags_rpptank = [
-    *cflags_rwcore,
     "-i src/rwsdk/plugin/ptank",
     "-i src/rwsdk/plugin/ptank/gcn",
     "-i src/rwsdk/plugin/ptank/generic",
+    *cflags_rwcore,
 ]
 cflags_rpskinmatfx = [
-    *cflags_rwcore,
     "-i src/rwsdk/plugin/skin2",
     "-i src/rwsdk/plugin/skin2/gcn",
+    *cflags_rwcore,
 ]
 cflags_rpusrdat = [
-    *cflags_rwcore,
     "-i src/rwsdk/plugin/userdata",
+    *cflags_rwcore,
 ]
 cflags_rpworld = [
-    *cflags_rwcore,
     "-i src/rwsdk/world",
     "-i src/rwsdk/world/pipe",
     "-i src/rwsdk/world/pipe/p2",
     "-i src/rwsdk/world/pipe/p2/gcn",
+    *cflags_rwcore,
 ]
 cflags_rtanim = [
-    *cflags_rwcore,
     "-i src/rwsdk/tool/anim",
+    *cflags_rwcore,
 ]
 cflags_rtcharse = [
-    *cflags_rwcore,
     "-i src/rwsdk/tool/charse",
+    *cflags_rwcore,
 ]
 cflags_rtfsyst = [
-    *cflags_rwcore,
     "-i src/rwsdk/tool/fsyst",
+    "-i src/rwsdk/tool/fsyst/gcn",
+    *cflags_rwcore,
 ]
 cflags_rtintsec = [
-    *cflags_rwcore,
     "-i src/rwsdk/tool/intsec",
+    *cflags_rwcore,
 ]
 cflags_rtquat = [
-    *cflags_rwcore,
     "-i src/rwsdk/tool/quat",
+    *cflags_rwcore,
 ]
 cflags_rtskinsp = [
-    *cflags_rwcore,
     "-i src/rwsdk/tool/sknsplit",
+    *cflags_rwcore,
 ]
 cflags_rtslerp = [
-    *cflags_rwcore,
     "-i src/rwsdk/tool/slerp",
+    *cflags_rwcore,
 ]
 cflags_rttilerd = [
-    *cflags_rwcore,
     "-i src/rwsdk/tool/tilerd",
+    *cflags_rwcore,
 ]
 
 # Game-specific flags
@@ -1509,7 +1510,9 @@ config.libs = [
         "rtfsyst",
         cflags_rtfsyst,
         [
-            Object(NonMatching, "rwsdk/tool/fsyst/rtfsmgr.c"),
+            # Release seems to have a different (older?) version of rtfsyst for some reason.
+            Object(Matching, "rwsdk/tool/fsyst/debug/rtfsmgr.c") if version_num == 0 else
+            Object(Matching, "rwsdk/tool/fsyst/release/rtfsmgr.c"),
         ],
     ),
     RenderWareLib(

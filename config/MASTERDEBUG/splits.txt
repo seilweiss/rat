@@ -7165,7 +7165,7 @@ rwsdk/tool/anim/rtanim.c:
 	.sbss       start:0x803C4510 end:0x803C4518
 	.sdata2     start:0x803CA128 end:0x803CA130
 
-rwsdk/tool/fsyst/rtfsmgr.c:
+rwsdk/tool/fsyst/release/rtfsmgr.c:
 	.text       start:0x80279CA8 end:0x8027A368
 	.bss        start:0x803BC830 end:0x803BC848
 	.sdata      start:0x803C0B38 end:0x803C0B50

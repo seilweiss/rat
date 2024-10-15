@@ -944,5 +944,10 @@ TkFSManagerGetValue(RtInt64 value);
 #include <dolphin.h>
 #include <stdio.h>
 
+#define RTFS_INITIALIZE_INTERRUPT_HANDLING
+#define RTFS_DISABLE_INTERRUPT OSDisableInterrupts()
+#define RTFS_ENABLE_INTERRUPT OSEnableInterrupts()
+#define RTFS_SHUTDOWN_INTERRUPT_HANDLING
+
 
 #endif /* RTFS_H */
