@@ -1548,7 +1548,7 @@ config.libs = [
         "rttilerd",
         cflags_rttilerd,
         [
-            Object(NonMatching, "rwsdk/tool/tilerd/rttilerd.c"),
+            Object(Matching, "rwsdk/tool/tilerd/rttilerd.c"),
         ],
     ),
     DolphinLib(
