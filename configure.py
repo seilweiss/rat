@@ -1526,7 +1526,7 @@ config.libs = [
         "rtquat",
         cflags_rtquat,
         [
-            Object(NonMatching, "rwsdk/tool/quat/rtquat.c"),
+            Object(Matching, "rwsdk/tool/quat/rtquat.c"),
         ],
     ),
     RenderWareLib(
