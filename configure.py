@@ -1533,8 +1533,8 @@ config.libs = [
         "rtskinsp",
         cflags_rtskinsp,
         [
-            Object(NonMatching, "rwsdk/tool/sknsplit/skinsplit.c"),
-            Object(NonMatching, "rwsdk/tool/sknsplit/rtskinsp.c"),
+            Object(Matching, "rwsdk/tool/sknsplit/skinsplit.c"),
+            Object(Matching, "rwsdk/tool/sknsplit/rtskinsp.c"),
         ],
     ),
     RenderWareLib(
